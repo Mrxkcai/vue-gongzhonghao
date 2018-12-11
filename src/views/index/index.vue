@@ -1,7 +1,7 @@
 <template>
     <div class="index">
         fsdkfhsl
-        <nw-footer isSelected1="true"></nw-footer>
+        <nw-footer isSelected1></nw-footer>
     </div>
 </template>  
 <script>
