@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Index from '../views/index/index'
 import My from '../views/my'
-import MyInfo from '../views/my/myInfo'
+import MyInfo from '../views/my/myInfo/index'
 import Deposit from '../views/my/deposit'
 import CustomService from '../views/my/customerService'
 import Remind from '../views/my/remind'
@@ -18,29 +18,22 @@ const routes = [
     }, {
         path: '/my',
         name: 'my',
-        component: () => import('../views/my/index.vue'),
-        children: [
-            {
-                path: '/',
-                component: My
-            },
-            {
-                path: '/myInfo',
-                component: MyInfo
-            }, {
-                path: '/deposit',
-                component: Deposit
-            }, {
-                path: '/customerService',
-                component: CustomService
-            }, {
-                path: '/remind',
-                component: Remind
-            }, {
-                path: '/compete',
-                component: Compete
-            }
-        ]
+        component: My
+    }, {
+        path: '/myInfo',
+        component: MyInfo
+    }, {
+        path: '/deposit',
+        component: Deposit
+    }, {
+        path: '/customerService',
+        component: CustomService
+    }, {
+        path: '/remind',
+        component: Remind
+    }, {
+        path: '/compete',
+        component: Compete
     }
 ]
 
