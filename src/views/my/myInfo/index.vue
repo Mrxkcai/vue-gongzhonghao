@@ -34,7 +34,7 @@
                     <div class="change-container">
                         <group>
                             <div style="display:flex;justify-content: space-between;align-items: center;">
-                                <x-input title="title" icon-type="clear" placeholder="请输入新手机号">
+                                <x-input title="title" icon-type="clear" placeholder="请输入新手机号" style="padding-right:0;">
                                     <img slot="label" style="padding-right:10px;display:block;" src="../../../assets/images/icon_cellphone@2x.png" width="16" height="18">
                                 </x-input>
                                 <x-button class="sendcode-btn" mini type="warn">发送验证码</x-button>
@@ -161,13 +161,14 @@ import { Cell, Group, XButton, Popup, XInput, TransferDomDirective as TransferDo
     }
 
     button.sendcode-btn {
-        font-size: 13px!important;
-        width: 5.0rem!important;
+        font-size: 12px!important;
+        width: 4.2rem!important;
         height: 40px;
         margin: 0;
     }
 
+
     .change-container input {
-        font-size: 15px;
+        font-size: 13px;
     }
 </style>
