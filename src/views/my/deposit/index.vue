@@ -1,5 +1,6 @@
 <template>
     <div class="deposit">
+        <div v-wechat-title="$route.meta.title"></div>
         <div class="top">
             <p>保证金 (元)</p>
             <div class="deposit-container">

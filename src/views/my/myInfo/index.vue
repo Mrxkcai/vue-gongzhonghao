@@ -1,5 +1,6 @@
 <template>
     <div class="myInfo">
+        <div v-wechat-title="$route.meta.title"></div>
         <group>
             <cell 
                 title="身份信息" 

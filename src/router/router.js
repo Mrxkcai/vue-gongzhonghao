@@ -14,26 +14,47 @@ const routes = [
     {
         path: '/',
         name: 'index',
-        component: Index
+        component: Index,
+        meta: {
+            title: '参赛号拍卖'
+        }
     }, {
         path: '/my',
         name: 'my',
-        component: My
+        component: My,
+        meta: {
+            title: '我的'
+        }
     }, {
         path: '/myInfo',
-        component: MyInfo
+        component: MyInfo,
+        meta: {
+            title: '我的个人资料'
+        }
     }, {
         path: '/deposit',
-        component: Deposit
+        component: Deposit,
+        meta: {
+            title: '我的保证金'
+        }
     }, {
         path: '/customerService',
-        component: CustomService
+        component: CustomService,
+        meta: {
+            title: '客服与帮助'
+        }
     }, {
         path: '/remind',
-        component: Remind
+        component: Remind,
+        meta: {
+            title: '我的提醒'
+        }
     }, {
         path: '/compete',
-        component: Compete
+        component: Compete,
+        meta: {
+            title: '我的拍卖'
+        }
     }
 ]
 

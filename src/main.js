@@ -7,6 +7,7 @@ import 'lib-flexible/flexible.js'
 import 'reset.less'
 
 Vue.config.productionTip = false
+Vue.use(require('vue-wechat-title'));
 
 new Vue({
     router,

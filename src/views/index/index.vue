@@ -1,5 +1,6 @@
 <template>
     <div class="index">
+        <div v-wechat-title="$route.meta.title"></div>
         fsdkfhsl
         <nw-footer isSelected1></nw-footer>
     </div>
@@ -16,7 +17,7 @@
             return {
 
             }
-        }
+        },
     }
 </script>
 
