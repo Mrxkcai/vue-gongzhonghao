@@ -1,6 +1,5 @@
 <template>
     <div class="my">
-        <router-view></router-view>
         <div class="top-container">
             <div class="avator">
                 <img src="https://wx.qlogo.cn/mmopen/vi_32/rvx1PxbCJIJKqdmscqnic4jDep3QibDjXYAAYbkibyyxn5EgvFaj2fG4a3HVLqglRKhScicPaMzbmS8W9nOBe1IHrA/132" alt="">
@@ -27,7 +26,7 @@
                 </group>
             </div>
         </div>
-        <nw-footer isSelected2="true"></nw-footer>
+        <nw-footer isSelected2></nw-footer>
     </div>
 </template>
 
@@ -44,7 +43,6 @@
         },
         data() {
             return {
-                
             }
         }
     }
@@ -88,6 +86,9 @@
                 background: #fff;
                 .weui-cell {
                     margin-top: -1px;
+                    .vux-cell-primary {
+                        height: 30px!important;
+                    }
                 }
                 .weui-cell:before,
                 .weui-cell:after,

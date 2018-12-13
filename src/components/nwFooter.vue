@@ -14,14 +14,14 @@
 <script>
     import { Tabbar, TabbarItem } from 'vux'
     export default {
-        name: 'footer',
+        name: 'nwfooter',
         components:{
             Tabbar,
             TabbarItem
         },
         props: {
             isSelected1: {
-                type: [Boolean,String],
+                type: [Boolean],
                 default: false
             },
             isSelected2: {
