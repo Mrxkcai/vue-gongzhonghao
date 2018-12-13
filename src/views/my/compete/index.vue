@@ -237,7 +237,6 @@
        },
        mounted(){
            // console.log('in')
-           // document.title = "我的拍卖"
            //滚动事件触发
            var that = this;
            window.onscroll = function() {
