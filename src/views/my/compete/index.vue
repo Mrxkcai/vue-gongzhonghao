@@ -9,7 +9,7 @@
         </div>
         <p style="height: 44px;"></p>
         
-        <div>
+        <div v-show="tab1">
             <div class="item" v-for=" i,index in 10 " >
                 <p class="inTime">预计结拍时间：<span>12.01 12:00</span></p>
                 <div class="clear">
@@ -48,6 +48,105 @@
             
             
         </div>
+        
+        
+        
+        <!-- 带支付    S -->
+        <div v-show="tab2" class="willPay">
+            <div class="item" v-for=" i,index in 10 " >
+            	<p class="inTime">预计结拍时间：<span>12.01 12:00</span></p>
+            	<div class="clear">
+            		<span class="brage">竞拍成功</span>
+            		<span class="tiemPower">2019年 西安国际马拉松 A88888 的使用权</span><p style="clear: both;"></p>
+            	</div>
+            	
+            	<div class="clear nowMoney tapePayment">
+            		<span>结拍价：</span>
+            		<span>¥ </span>
+            		<span>3000.00</span>
+            		<span>支付</span>
+            		<span @click="getIndex(index)">
+            			<x-switch title="" v-model="show2" style="width:70px"></x-switch>
+            		</span>
+            		
+            	</div>
+            </div>
+            
+            
+            
+            <!-- 蒙版 S -->
+            
+            <div v-transfer-dom>
+                <popup v-model="show2" @on-hide="log('hide')" @on-show="log('show')">
+                    <div class="popup0">
+                    <div>
+                        <span class="tiemPower tiemPower2" style="width: 100%;text-align: center;margin: 17px 0 0 0;">2019年 西安国际马拉松 <span class="numberTip">A18888</span> 的使用权</span><p style="clear: both;"></p>
+                        
+                        <div class="infoItem">
+                            <p><span>姓名</span><span>王某某</span></p>
+                            <p><span>证件号</span><span>610302199107202062</span></p>
+                            <p><span>结拍价</span><span><span>¥ </span><span style="font-weight: 600;">3000</span></span></p>
+                            <p><span>保证金</span><span><span style="color: #F17F1A;">-¥ </span><span style="font-weight: 600;color: #F17F1A;">20</span></span></p>
+                        </div>
+                        
+                        <div class="confirmPay">
+                            <span>总计：</span>
+                            <span>¥</span>
+                            <span>2980</span>
+                            <button @click="confirmPay()">确认支付</button>
+                        </div>
+                    </div>
+                    </div>
+                </popup>
+            </div>
+            
+            <!-- 蒙版 E -->
+            
+            
+        </div>
+        <!-- 带支付    E -->
+        
+        
+        
+        <!-- 已完成    S -->
+        <div v-show="tab3" class="finishedPay">
+        	<div class="item" v-for=" i,index in 10 " >
+        		<div class="clear" style="margin: 10px 0 0 0;">
+        			<span class="brage">已成交</span>
+        			<span class="tiemPower">2019年 西安国际马拉松 A77777 的使用权</span><p style="clear: both;"></p>
+        		</div>
+        		
+        		<div class="clear nowMoney">
+        			<span>成交价：</span>
+        			<span>¥ </span>
+        			<span>3000.00</span>
+        			<span>查看</span>
+        			<span @click="getIndex(index)">
+        				<x-switch title="" v-model="show3" style="width:70px"></x-switch>
+        			</span>
+        			
+        		</div>
+        	</div>
+            
+            
+            <div v-transfer-dom>
+                <popup v-model="show3" @on-hide="log('hide')" @on-show="log('show')">
+                    <div class="popup0">
+                    <div>
+                        <span class="brage brage3">已成交</span>
+                        <span class="tiemPower">2019年 西安国际马拉松 <span class="numberTip">A77777</span> 的使用权</span><p style="clear: both;"></p>
+                        
+                        <div class="infoItem">
+                            <p><span>姓名</span><span>王某某</span></p>
+                            <p><span>证件号</span><span>610302199107202062</span></p>
+                            <p><span>成交价</span><span><span>¥ </span><span style="font-weight: 600;">3000</span></span></p>
+                        </div>
+                    </div>
+                    </div>
+                </popup>
+            </div>
+        </div>
+        <!-- 已完成    E -->
     </div>
 </template>
 
@@ -69,12 +168,30 @@
           return {
              list:[] ,
              show: false,
-             showToast:false
+             show2: false,
+             show3: false,
+             showToast:false,
+             tab1:true,
+             tab2:false,
+             tab3:false
           }
        },
       methods:{
           getItem(index){
               // console.log(index)
+              if(index == 0){
+                  this.tab1 = true
+                  this.tab2 = false
+                  this.tab3 = false
+              }else if(index == 1){
+                  this.tab1 = false
+                  this.tab2 = true
+                  this.tab3 = false
+              }else if(index == 2){
+                  this.tab1 = false
+                  this.tab2 = false
+                  this.tab3 = true
+              }
           },
           log (str) {
               // console.log(str)
@@ -82,15 +199,31 @@
             
         getIndex(index){
             // console.log(index)
+        },
+        
+        //-确认支付
+        confirmPay(){
+            // console.log(22)
         }
             
        },
+       mounted(){
+           // console.log('in')
+           document.title = "我的拍卖"
+       },
+       destroyed(){
+           // console.log('out')
+           document.title = ""
+       }
      }
 
 </script>
 <style lang="less" scoped >
     @d:{display: inline-block};
-    a,img,button,input,textarea{-webkit-tap-highlight-color:rgba(255,255,255,0);}
+    a,img,button,input,textarea,div{-webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select:none;}
     .compete{
         background-color: rgba(222,222,222,0);
     }
@@ -99,10 +232,11 @@
        position: fixed;
        top: 0;
        left: 0;
+       z-index: 9;
    }
    .item{
        width: 341px;
-       height: 127px;
+       min-height: 127px;
        background: #fff;
        margin: 18px auto 0;
        border-radius:10px;
@@ -255,4 +389,83 @@
     color:rgba(25,33,55,1);
     line-height:20px;
    }
+   
+   
+   .willPay{
+       // 带支付
+       .tapePayment>span:nth-child(4){
+            background:rgba(240,168,0,1);
+            color: #FFFFFF;
+            border: none;
+           };
+           .infoItem>p:nth-child(4)>span:nth-child(2){
+               @d();
+               float: right;
+               font-size:14px;
+               font-family:PingFangSC-Regular;
+               font-weight:400;
+               color:#F17F1A;
+               line-height:20px;
+           };
+           
+   }
+   .confirmPay{
+   	width: 100%;
+   	height: 68px;
+   	background: #fff;
+    overflow: hidden;
+   };
+   .confirmPay>span:nth-child(1){
+       font-size:14px;
+        font-family:PingFangSC-Regular;
+        font-weight:400;
+        color:rgba(25,33,55,1);
+        line-height:68px;
+        margin: 0 0 0 17px;
+   }
+   .confirmPay>span:nth-child(2){
+   	font-size:14px;
+   	font-family:PingFangSC-Regular;
+   	font-weight:500;
+    color:rgba(25,33,55,1);
+   	line-height:68px;
+   	margin: 0 0 0 10px;
+   }
+   .confirmPay>span:nth-child(3){
+   font-size:21px;
+   font-family:PingFangSC-Regular;
+   font-weight:500;
+   color:rgba(25,33,55,1);
+   line-height:68px;
+   margin: 0 0 0 10px;
+   }
+   .confirmPay>button{
+       width:171px;
+        height:46px;
+        background:rgba(240,168,0,1);
+        border-radius:25px;
+        font-size:16px;
+        font-family:PingFangSC-Medium;
+        font-weight:500;
+        color:rgba(255,255,255,1);
+        line-height:46px;
+        float: right;
+        margin: 11px 17px 0 0 ;
+   }
+
+    
+    // 已完成
+    .finishedPay .brage{
+        background: #002F7B;
+        color: #fff;
+        padding: 0 5px;
+    }
+    .brage3{
+        background: #002F7B;
+        color: #fff;
+        padding: 0 5px;
+    }
+    .finishedPay .item{
+        min-height: 120px;
+    }
 </style>

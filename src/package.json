@@ -15,7 +15,6 @@
     "reset.less": "^1.0.5",
     "vue": "^2.5.17",
     "vue-router": "^3.0.1",
-    "vue-wechat-title": "^2.0.5",
     "vuex": "^3.0.1",
     "vux": "^2.9.2"
   },
@@ -32,7 +31,6 @@
     "postcss-px2rem": "^0.3.0",
     "vue-loader": "^14.2.2",
     "vue-template-compiler": "^2.5.17",
-    "vue-wechat-title": "^2.0.5",
     "vux-loader": "^1.2.9"
   },
   "eslintConfig": {

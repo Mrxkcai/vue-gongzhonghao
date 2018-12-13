@@ -27,7 +27,7 @@ module.exports = {
     // 有了map就可以像未加密的代码一样，准确的输出是哪一行哪一列有错。
     productionSourceMap: false,
     devServer: {
-        host: '192.168.31.5',  //-localhost
+        host: 'localhost',
         port: 8080,
         https: false,
         open: true,
