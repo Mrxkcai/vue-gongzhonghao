@@ -151,7 +151,7 @@
 </template>
 
 <script>
-    import { Tab, TabItem, Popup, TransferDom, Group, XSwitch } from 'vux'
+    import { Tab, TabItem, Popup, TransferDom, Group, XSwitch, ViewBox } from 'vux'
     export default {
         directives: {
             TransferDom
@@ -162,7 +162,8 @@
         Popup,
         TransferDom,
         Group,
-        XSwitch
+        XSwitch,
+        ViewBox
       },
       data(){
           return {
@@ -204,12 +205,51 @@
         //-确认支付
         confirmPay(){
             // console.log(22)
-        }
+        },
+        //获取滚动条当前的位置
+        
+        getScrollTop(){
+            var scrollTop = 0;
+            if(document.documentElement && document.documentElement.scrollTop) {
+                 scrollTop = document.documentElement.scrollTop;
+             } else if(document.body) {
+                 scrollTop = document.body.scrollTop;
+             }
+             return scrollTop;
+        },
+        
+        //获取当前可视范围的高度 
+        
+        getClientHeight(){
+            var clientHeight = 0;
+             if(document.body.clientHeight && document.documentElement.clientHeight) {
+                 clientHeight = Math.min(document.body.clientHeight, document.documentElement.clientHeight);
+             } else {
+                 clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+             }
+             return clientHeight;
+        },
+        
+         //获取文档完整的高度 
+         
+         getScrollHeight(){
+             return Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+         }
+        
+        
             
        },
        mounted(){
            // console.log('in')
            document.title = "我的拍卖"
+           //滚动事件触发
+           var that = this;
+           window.onscroll = function() {
+             if(that.getScrollTop() + that.getClientHeight() == that.getScrollHeight()) {
+                 console.log(333)
+             }
+         }
+           
        },
        destroyed(){
            // console.log('out')
