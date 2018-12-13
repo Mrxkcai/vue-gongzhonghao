@@ -75,9 +75,9 @@
                 </div>
             </li>
         </ul>
-         <!-- 验证码 model -->
+        <!-- 验证码 model -->
         <div v-transfer-dom>
-            <popup v-model="showTelInfo" is-transparent :hide-on-blur=false>
+            <popup v-model="showTelInfo" is-transparent :hide-on-blur=false class="custombottom">
                 <div class="popup-container">
                     <div class="change-container">
                         <group>
@@ -103,7 +103,7 @@
 <script>
     import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, TransferDomDirective as TransferDom } from 'vux'
     import nwFooter from '../../components/nwFooter'
-
+    import  { login, getAuctionNumber } from '../../service/api'
     export default {
         name: 'index',
         directives: {
@@ -131,7 +131,6 @@
         },
         data() {
             return {
-                isPass: true,
                 showTelInfo: false,
                 authCode: '',
                 tabItems: [{
@@ -159,9 +158,10 @@
             }
         },
         created() {
-            if(!this.isPass) {
-                this.changeTelInfo();
-            }
+            // login({mobile:13409116884,code:1234}).then(res => {
+            //     console.log(res)
+            // })
+            this.getAuctions()
         },
         methods: {
             tabItem(i) {
@@ -169,6 +169,19 @@
             },
             changeTelInfo() {
                 this.showTelInfo = true;
+            },
+            getAuctions() {
+                let params = {
+                    status: '',
+                    pageNum: 1,
+                    pageSize: 100
+                };
+                getAuctionNumber(params).then(res => {
+                    console.log(res)
+                    if(res.code !== 401) {
+                        this.changeTelInfo();
+                    }
+                })
             }
         }
     }
@@ -192,10 +205,10 @@
                             line-height: 1.3;
                             span{
                                 color: #fff;
-                                font-size: 0.2rem;
-                                .status-text {
-                                    font-size: 14px;
-                                }
+                                font-size: 12px;
+                            }
+                            .status-text {
+                                font-size: 14px;
                             }
                         }
                         
@@ -299,5 +312,9 @@
                 padding: 0 17px;
             }
         }
+        
+    }
+    .custombottom {
+        bottom: 35%!important;
     }
 </style>

@@ -109,4 +109,11 @@
         content: "*";
         margin-right: 5px;
     }
+    .weui-bar__item_on span {
+        display: block;
+        width: 36px;
+        height: 50px;
+        margin: 0 auto;
+        border-top: 3px solid #002F7B;
+    }
 </style>
