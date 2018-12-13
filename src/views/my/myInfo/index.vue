@@ -12,7 +12,7 @@
             <cell title="手机号" is-link @click.native="changeTelInfo" :value="telphone"></cell>
         </group>
         <div v-transfer-dom>
-            <popup v-model="showIdentityInfo" is-transparent>
+            <popup v-model="showIdentityInfo" is-transparent class="custombottom">
                 <div class="popup-container">
                     <div class="change-container">
                         <group>
@@ -29,8 +29,9 @@
                 </div>
             </popup>
         </div>
+        <div class="myInfo-popup">
         <div v-transfer-dom>
-            <popup v-model="showTelInfo" is-transparent>
+            <popup v-model="showTelInfo" is-transparent class="custombottom">
                 <div class="popup-container">
                     <div class="change-container">
                         <group>
@@ -50,6 +51,7 @@
                     <x-button type="primary">确认修改</x-button>
                 </div>
             </popup>
+        </div>
         </div>
     </div>
 </template>
@@ -94,82 +96,11 @@ import { Cell, Group, XButton, Popup, XInput, TransferDomDirective as TransferDo
         padding: 11px 17px;
     }
 
-    .weui-cells {
-        margin-top: 0!important;
-        border-radius: 10px;
-    }
-
-    .weui-cells:after {
-        border-bottom: none;
-    }
-
-    .weui-cell:before {
-        left: 0!important;
-    }
-
-    .vux-label {
-        font-size: 15px;
-        font-weight: 400;
-        color: #575D6F;
-        line-height: 21px;
-    }   
-
-    .weui-cell_access .weui-cell__ft, 
-    .vux-label-desc {
-        font-size:15px;
-        font-weight:400;
-        color:#192137!important;
-        line-height:21px;
-        padding-right: 24px!important;
-    }
-
-    .weui-cell:nth-child(2) span {
-        display:none;
-    }
-    
     .vux-popup-dialog {
-        bottom: 35%!important;
+        bottom: 35%;
     }
 
-    .popup-container {
-        width: 70%;
-        padding: 15px;
-        background-color:#fff;
-        margin:0 auto;
-        border-radius: 10px;
-    }
-
-    .weui-btn_default {
-        font-size: 16px;
-        font-weight: 500;
-        color:#fff!important;
-    }
-    .popup-container {
-        padding: 34px 0.8rem;
-    }
-
-    .popup-container button{
-        font-size: 16px;
-        font-weight: 500;
-        border-radius: 99px;
-        margin-top: 26px;
-        width: 6rem;
-        height: 44px;
-    }
-
-    .weui-cells:nth-child(1)::before {
-        border: none;
-    }
-
-    button.sendcode-btn {
-        font-size: 12px!important;
-        width: 4.2rem!important;
-        height: 40px;
-        margin: 0;
-    }
-
-
-    .change-container input {
-        font-size: 13px;
+    .custombottom {
+        bottom: 35%;
     }
 </style>

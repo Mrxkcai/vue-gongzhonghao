@@ -148,10 +148,6 @@
                 font-weight: 400;
                 color:#F17F1A;
                 line-height: 16px;
-                .tips:before {
-                    content: "*";
-                    margin-right: 5px;
-                }
             }
             .deposit-detail-container {
                 width: 100%;
