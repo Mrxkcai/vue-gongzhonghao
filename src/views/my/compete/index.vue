@@ -1,5 +1,6 @@
 <template>
     <div class="compete">
+<<<<<<< HEAD
         <div class="fixTab">
             <tab :line-width="2" active-color="#575D6F" default-color="#CBCED5" custom-bar-width="50px">
                 <tab-item selected @on-item-click="getItem">拍卖中</tab-item>
@@ -48,6 +49,10 @@
             
             
         </div>
+=======
+        <div v-wechat-title="$route.meta.title"></div>
+        compete
+>>>>>>> 886a670bb6dc75e54edf22b7778dfea68d61f2a6
     </div>
 </template>
 
