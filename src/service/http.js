@@ -3,11 +3,11 @@ import QS from 'qs' // 引入qs模块，用来序列化post类型的数据
 
 // 环境的切换 https://www.apiopen.top/novelApi
 if (process.env.NODE_ENV === 'development') {
-    axios.defaults.baseURL = 'http://elm.cangdu.org'
+    axios.defaults.baseURL = 'http://wxcs.nuoweibd.com/marathon/'
 } else if (process.env.NODE_ENV === 'debug') {
-    axios.defaults.baseURL = 'www.apiopen.top'
+    axios.defaults.baseURL = 'http://wxcs.nuoweibd.com/marathon/'
 } else if (process.env.NODE_ENV === 'production') {
-    axios.defaults.baseURL = 'www.apiopen.top'
+    axios.defaults.baseURL = 'http://wxcs.nuoweibd.com/marathon/'
 }
 
 axios.defaults.timeout = 10000
