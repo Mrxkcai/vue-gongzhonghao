@@ -12,7 +12,7 @@
             <cell title="手机号" is-link @click.native="changeTelInfo" :value="telphone"></cell>
         </group>
         <div v-transfer-dom>
-            <popup v-model="showIdentityInfo" is-transparent>
+            <popup v-model="showIdentityInfo" is-transparent class="custombottom">
                 <div class="popup-container">
                     <div class="change-container">
                         <group>
@@ -31,7 +31,7 @@
         </div>
         <div class="myInfo-popup">
         <div v-transfer-dom>
-            <popup v-model="showTelInfo" is-transparent>
+            <popup v-model="showTelInfo" is-transparent class="custombottom">
                 <div class="popup-container">
                     <div class="change-container">
                         <group>
@@ -97,6 +97,10 @@ import { Cell, Group, XButton, Popup, XInput, TransferDomDirective as TransferDo
     }
 
     .vux-popup-dialog {
+        bottom: 35%;
+    }
+
+    .custombottom {
         bottom: 35%;
     }
 </style>
