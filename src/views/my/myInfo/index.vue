@@ -29,6 +29,7 @@
                 </div>
             </popup>
         </div>
+        <div class="myInfo-popup">
         <div v-transfer-dom>
             <popup v-model="showTelInfo" is-transparent>
                 <div class="popup-container">
@@ -50,6 +51,7 @@
                     <x-button type="primary">确认修改</x-button>
                 </div>
             </popup>
+        </div>
         </div>
     </div>
 </template>
@@ -92,5 +94,9 @@ import { Cell, Group, XButton, Popup, XInput, TransferDomDirective as TransferDo
 <style>
     .myInfo {
         padding: 11px 17px;
+    }
+
+    .vux-popup-dialog {
+        bottom: 35%;
     }
 </style>
