@@ -151,7 +151,7 @@
 </template>
 
 <script>
-    import { Tab, TabItem, Popup, TransferDom, Group, XSwitch } from 'vux'
+    import { Tab, TabItem, Popup, TransferDom, Group, XSwitch, ViewBox } from 'vux'
     export default {
         directives: {
             TransferDom
@@ -162,60 +162,96 @@
         Popup,
         TransferDom,
         Group,
-        XSwitch
+        XSwitch,
+        ViewBox
+      },
+      data(){
+          return {
+             list:[] ,
+             show: false,
+             show2: false,
+             show3: false,
+             showToast:false,
+             tab1:true,
+             tab2:false,
+             tab3:false
+          }
+       },
+      methods:{
+          getItem(index){
+              // console.log(index)
+              if(index == 0){
+                  this.tab1 = true
+                  this.tab2 = false
+                  this.tab3 = false
+              }else if(index == 1){
+                  this.tab1 = false
+                  this.tab2 = true
+                  this.tab3 = false
+              }else if(index == 2){
+                  this.tab1 = false
+                  this.tab2 = false
+                  this.tab3 = true
+              }
+          },
+          log (str) {
+              // console.log(str)
         },
-        data(){
-            return {
-                list:[] ,
-                show: false,
-                show2: false,
-                show3: false,
-                showToast:false,
-                tab1:true,
-                tab2:false,
-                tab3:false
-            }
+        
+        //-确认支付
+        confirmPay(){
+            // console.log(22)
         },
-        methods:{
-            getItem(index){
-                // console.log(index)
-                if(index == 0){
-                    this.tab1 = true
-                    this.tab2 = false
-                    this.tab3 = false
-                }else if(index == 1){
-                    this.tab1 = false
-                    this.tab2 = true
-                    this.tab3 = false
-                }else if(index == 2){
-                    this.tab1 = false
-                    this.tab2 = false
-                    this.tab3 = true
-                }
-            },
-            log (str) {
-                // console.log(str)
-            },
+        //获取滚动条当前的位置
+        
+        getScrollTop(){
+            var scrollTop = 0;
+            if(document.documentElement && document.documentElement.scrollTop) {
+                 scrollTop = document.documentElement.scrollTop;
+             } else if(document.body) {
+                 scrollTop = document.body.scrollTop;
+             }
+             return scrollTop;
+        },
+        
+        //获取当前可视范围的高度 
+        
+        getClientHeight(){
+            var clientHeight = 0;
+             if(document.body.clientHeight && document.documentElement.clientHeight) {
+                 clientHeight = Math.min(document.body.clientHeight, document.documentElement.clientHeight);
+             } else {
+                 clientHeight = Math.max(document.body.clientHeight, document.documentElement.clientHeight);
+             }
+             return clientHeight;
+        },
+        
+         //获取文档完整的高度 
+         
+         getScrollHeight(){
+             return Math.max(document.body.scrollHeight, document.documentElement.scrollHeight);
+         }
+        
+        
             
-            getIndex(index){
-                // console.log(index)
-            },
-            
-            //-确认支付
-            confirmPay(){
-                // console.log(22)
-            }
-                
-        },
-        mounted(){
-            // console.log('in')
-            document.title = "我的拍卖"
-        },
-        destroyed(){
-            // console.log('out')
-            document.title = ""
-        }
-    }
+       },
+       mounted(){
+           // console.log('in')
+           //滚动事件触发
+           var that = this;
+           window.onscroll = function() {
+             if(that.getScrollTop() + that.getClientHeight() == that.getScrollHeight()) {
+                 console.log(333)
+             }
+         }
+           
+       },
+       destroyed(){
+           // console.log('out')
+           document.title = ""
+       }
+     }
+       
 
 </script>
 <style lang="less" scoped >
