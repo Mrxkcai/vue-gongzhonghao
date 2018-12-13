@@ -96,11 +96,7 @@ import { Cell, Group, XButton, Popup, XInput, TransferDomDirective as TransferDo
         padding: 11px 17px;
     }
 
-    .vux-popup-dialog {
-        bottom: 35%;
-    }
-
     .custombottom {
-        bottom: 35%;
+        bottom: 35%!important;
     }
 </style>
