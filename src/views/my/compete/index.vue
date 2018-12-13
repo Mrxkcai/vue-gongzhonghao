@@ -194,6 +194,9 @@
                   this.tab3 = true
               }
           },
+          getIndex(){
+            
+          },
           log (str) {
               // console.log(str)
         },
