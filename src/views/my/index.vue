@@ -3,12 +3,13 @@
         <div v-wechat-title="$route.meta.title"></div>
         <div class="top-container">
             <div class="avator">
-                <img src="https://wx.qlogo.cn/mmopen/vi_32/rvx1PxbCJIJKqdmscqnic4jDep3QibDjXYAAYbkibyyxn5EgvFaj2fG4a3HVLqglRKhScicPaMzbmS8W9nOBe1IHrA/132" alt="">
+                <img src="userInfo.headUrl">
+                <!-- <img src="https://wx.qlogo.cn/mmopen/vi_32/rvx1PxbCJIJKqdmscqnic4jDep3QibDjXYAAYbkibyyxn5EgvFaj2fG4a3HVLqglRKhScicPaMzbmS8W9nOBe1IHrA/132"> -->
             </div>
-            <p class="nickname">我的昵称</p>
+            <p class="nickname">{{ userInfo.nickName }}</p>
             <div class="my-container">
                 <group>
-                    <cell title="我的个人资料" is-link link="/myInfo">
+                    <cell title="我的个人资料" is-link @click.native="goMyInfo">
                         <img slot="icon" width="16" style="display:block;margin-right:13px;" src="../../assets/images/icon_mine_inform.png">
                     </cell>
                     <cell title="我的拍卖" is-link link="/compete">
@@ -34,6 +35,8 @@
 <script>
     import { Badge, Group, Cell } from 'vux'
     import nwFooter from '../../components/nwFooter'
+    import { getUserInfo } from '../../service/api'
+
     export default {
         name: 'my',
         components: {
@@ -44,6 +47,21 @@
         },
         data() {
             return {
+                userInfo: Object
+            }
+        },
+        created() {
+            getUserInfo().then(res => {
+                console.log(res)
+                if(res.code == 200) {
+                    this.userInfo = res.data
+                }
+            })
+        },
+        methods: {
+            goMyInfo() {
+                let userInfo = this.userInfo
+                this.$router.push({ path: `/myInfo?realName=${userInfo.realName}&mobile=${userInfo.mobile}&idCard=${userInfo.idCard}` })
             }
         }
     }

@@ -60,7 +60,7 @@
                     <span>A77777</span>
                 </div>
                 <div class="item-rt">
-                    <x-button mini type="warn" class="remind-btn">去竞拍</x-button>
+                    <x-button mini type="warn" class="remind-btn" @click.native="goCompeteList">去竞拍</x-button>
                     <x-button mini type="warn" plain class="buy-btn">直接购买 ￥30000</x-button>
                 </div>
             </li>
@@ -158,8 +158,9 @@
             }
         },
         created() {
-            login({mobile:13409116884,code:1234}).then(res => {
+            login({mobile:123,code:1234}).then(res => {
                 console.log(res)
+                
             })
             this.getAuctions()
         },
@@ -182,6 +183,9 @@
                         this.changeTelInfo();
                     }
                 })
+            },
+            goCompeteList() {
+                this.$router.push({ path: '/competeList', query: { id: 123 }})
             }
         }
     }

@@ -29,6 +29,7 @@
 
 <script>
     import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
+    import {} from '../../../service/api'
     export default {
         name: 'remind',
         components: {

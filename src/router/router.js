@@ -7,6 +7,7 @@ import Deposit from '../views/my/deposit'
 import CustomService from '../views/my/customerService'
 import Remind from '../views/my/remind'
 import Compete from '../views/my/compete'
+import CompeteChat from '../views/competeChat'
 
 Vue.use(Router)
 
@@ -18,6 +19,10 @@ const routes = [
         meta: {
             title: '参赛号拍卖'
         }
+    }, {
+        path: '/competeChat',
+        name: 'competeChat',
+        component: CompeteChat
     }, {
         path: '/my',
         name: 'my',

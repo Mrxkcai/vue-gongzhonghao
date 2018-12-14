@@ -13,7 +13,7 @@ if (process.env.NODE_ENV === 'development') {
 axios.defaults.timeout = 10000
 // post请求头的设置
 // axios.defaults.headers.post['Content-Type'] = 'application/x-www-from-urlencoded;charset=UTF-8'
-
+axios.defaults.withCredentials = true
 // 封装axios的get方法和post方法
 export function get (url, params) {
     return new Promise((resolve, reject) => {

@@ -4,10 +4,12 @@
         <div class="top">
             <p style="color:#fff;">保证金 (元)</p>
             <div class="deposit-container">
-                <span class="deposit-money">0.00</span>
+                <span class="deposit-money">{{ amount }}</span>
                 <div class="deposit-btn-group">
-                    <x-button mini>冻结中</x-button>
-                    <x-button mini type="warn">提现</x-button>    
+                    <!-- // 状态 0 可提现 1 冻结中 2 已提现 -->
+                    <x-button mini type="warn" v-if="statusCode == 0">提现</x-button>
+                    <x-button mini disabled v-if="statusCode == 1">冻结中</x-button>
+                    <x-button mini disabled v-if="statusCode == 2">已提现</x-button>
                 </div>
             </div>
             <div class="deposit-tips">
@@ -19,66 +21,25 @@
                     <x-button class="deposit-detail-btn">保证金明细</x-button>
                 </div>
                 <ul class="deposit-detail-list" v-if="!ishasData">
-                    <li>
+                    <li v-for="n in marginList" :key="n.id">
                         <div>
-                            <span class="action-text">保证金退回</span>
-                            <span class="money">-￥ 20.00</span>
+                            <span class="action-text">{{ n.desc }}</span>
+                            <span class="money">-￥ {{ n.amount }}</span>
                         </div>
                         <div>
                             <span class="time">
-                                2018-12-12 12:00
+                                {{ n.createDate }}
                             </span>
 
-                            <span class="status">
+                            <span class="status" v-if="n.type ==0">
                                 [余额支付]
+                            </span>
+                            <span class="status" v-if="n.type ==1">
+                                [微信支付]
                             </span>
                         </div>
                     </li>
-                    <li>
-                        <div>
-                            <span class="action-text">保证金退回</span>
-                            <span class="money">-￥ 20.00</span>
-                        </div>
-                        <div>
-                            <span class="time">
-                                2018-12-12 12:00
-                            </span>
-
-                            <span class="status">
-                                [余额支付]
-                            </span>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <span class="action-text">保证金退回</span>
-                            <span class="money">-￥ 20.00</span>
-                        </div>
-                        <div>
-                            <span class="time">
-                                2018-12-12 12:00
-                            </span>
-
-                            <span class="status">
-                                [余额支付]
-                            </span>
-                        </div>
-                    </li>
-                    <li>
-                        <div>
-                            <span class="action-text">保证金退回</span>
-                            <span class="money">-￥ 20.00</span>
-                        </div>
-                        <div>
-                            <span class="time">
-                                2018-12-12 12:00
-                            </span>
-
-                            <span class="status">
-                                [余额支付]
-                            </span>
-                        </div>
-                    </li>
+                    
                 </ul>
                 <no-data explain="暂无相关记录" fontColor="#A5A8B4" containerHeight="9rem" v-else></no-data>
             </div>
@@ -89,7 +50,7 @@
 <script>
     import { XButton } from 'vux'
     import noData from '../../../components/noData'
-    import { getMargin } from '../../../service/api'
+    import { getMargin, getMarginLog } from '../../../service/api'
 
     export default {
         name: 'deposit',
@@ -99,7 +60,10 @@
         },
         data() {
             return {
-                ishasData: false
+                ishasData: false,
+                amount: '0.00',  // 保证金
+                statusCode: '',  // 状态 0 可提现 1 冻结中 2 已提现
+                marginList: []   // 保证金列表
             }
         },
         created() {
@@ -108,9 +72,21 @@
                 pageSize: 100
             }
             getMargin(opts).then(res => {
-                console.log(res)
+                if(res.code == 200) {
+                    this.amount = res.data.amount.toFixed(2)
+                    this.statusCode = res.data.status
+                    console.log(this.statusCode)
+                }
             })
+            this.marginLog(opts)
         },
+        methods: {
+            marginLog(params) {
+                getMarginLog(params).then(res => {
+                    this.marginList = res.data.content
+                })
+            }
+        }
     }
 </script>
 
