@@ -158,9 +158,9 @@
             }
         },
         created() {
-            // login({mobile:13409116884,code:1234}).then(res => {
-            //     console.log(res)
-            // })
+            login({mobile:13409116884,code:1234}).then(res => {
+                console.log(res)
+            })
             this.getAuctions()
         },
         methods: {

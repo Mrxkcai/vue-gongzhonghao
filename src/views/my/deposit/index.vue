@@ -2,11 +2,11 @@
     <div class="deposit">
         <div v-wechat-title="$route.meta.title"></div>
         <div class="top">
-            <p>保证金 (元)</p>
+            <p style="color:#fff;">保证金 (元)</p>
             <div class="deposit-container">
                 <span class="deposit-money">0.00</span>
                 <div class="deposit-btn-group">
-                    <x-button mini>提现</x-button>
+                    <x-button mini>冻结中</x-button>
                     <x-button mini type="warn">提现</x-button>    
                 </div>
             </div>
@@ -18,7 +18,7 @@
                 <div>
                     <x-button class="deposit-detail-btn">保证金明细</x-button>
                 </div>
-                <ul class="deposit-detail-list"  v-if="ishasData">
+                <ul class="deposit-detail-list" v-if="!ishasData">
                     <li>
                         <div>
                             <span class="action-text">保证金退回</span>
@@ -80,9 +80,7 @@
                         </div>
                     </li>
                 </ul>
-                <div class="no-data">
-                    <p>暂无相关记录</p>
-                </div>
+                <no-data explain="暂无相关记录" fontColor="#A5A8B4" containerHeight="9rem" v-else></no-data>
             </div>
         </div>
     </div>
@@ -90,16 +88,29 @@
 
 <script>
     import { XButton } from 'vux'
+    import noData from '../../../components/noData'
+    import { getMargin } from '../../../service/api'
+
     export default {
         name: 'deposit',
         components: {
-            XButton
+            XButton,
+            noData
         },
         data() {
             return {
                 ishasData: false
             }
-        }
+        },
+        created() {
+            let opts = {
+                pageNum: 1,
+                pageSize: 100
+            }
+            getMargin(opts).then(res => {
+                console.log(res)
+            })
+        },
     }
 </script>
 
@@ -108,15 +119,14 @@
         width: 100%;
         height: 100%;
         .top {
-            height: 4.5rem;
-            padding: 1.8rem 0.8rem 0 0.8rem;
+            height: 4.8rem;
+            padding: 1.2rem 0.8rem 0 0.8rem;
             background: url('../../../assets/images/bg.png') center;
             background-size: cover;
             p {
                 font-size:11px;
                 font-family:PingFangSC-Regular;
                 font-weight:400;
-                color:#fff;
                 line-height:16px;
             }
             .deposit-container {
@@ -136,7 +146,6 @@
                     button {
                         font-size: 12px;
                         color: #fff;
-                        width: 66px;
                         height: 26px;
                         margin: 7px 2px;
                         border-radius: 13px;
@@ -151,9 +160,8 @@
             }
             .deposit-detail-container {
                 width: 100%;
-                height: 398px;
                 margin: 0 auto;
-                margin-top: 20px;
+                margin: 0.7rem 0 0 0;
                 padding: 23px 0;
                 background:#fff;
                 box-shadow: 0px 2px 15px 0px rgba(81,81,87,0.3);
@@ -184,6 +192,9 @@
                                 color: #192137;
                                 line-height: 21px;
                             }
+                            .money {
+                                font-weight: 600;
+                            }
                             .time,.status {
                                 font-size: 11px;
                                 font-weight:400;
@@ -194,27 +205,8 @@
                         }
                     }
                 }
-                .no-data  {
-                    position: relative;
-                    width: 100%;
-                    height: 80%; 
-                    text-align: center;
-                    background: url('../../../assets/images/img_emptystate@3x.png') no-repeat center;
-                    background-size: 80%;
-                    p {
-                        position: absolute;
-                        bottom: 0px;
-                        width: 100%;
-                        text-align: center;
-                        font-size: 13px;
-                        font-weight: 400;
-                        color: #A5A8B4;
-                        line-height: 18px;
-                    }
-                }
+                
             }
         }
-
-        
     }
 </style>

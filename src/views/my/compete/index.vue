@@ -29,7 +29,7 @@
                 </div>
             </div>
             
-            <div v-transfer-dom>
+            <!-- <div v-transfer-dom>
                 <popup v-model="show" @on-hide="log('hide')" @on-show="log('show')">
                 <div class="popup0">
                     <div>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 </popup>
-            </div>
+            </div> -->
             
             
         </div>
