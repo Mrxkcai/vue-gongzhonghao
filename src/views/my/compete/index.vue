@@ -23,11 +23,13 @@
                     <span>3000.00</span>
                     <span>查看</span>
                     <span @click="getIndex(index)">
-                        <x-switch title="" v-model="show" style="width:70px"></x-switch>
+                        <x-switch title="" style="width:70px"></x-switch>
                     </span>
                     
                 </div>
             </div>
+            
+            
             
             <div v-transfer-dom>
                 <popup v-model="show" @on-hide="log('hide')" @on-show="log('show')">
