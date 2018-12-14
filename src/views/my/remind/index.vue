@@ -1,7 +1,7 @@
 <template>
     <div class="remind">
         <div v-wechat-title="$route.meta.title"></div>
-        <div class="header-top">
+        <!-- <div class="header-top">
             <tab>
                 <tab-item v-for="n in 8" :key="n" :selected="n===1" @on-item-click="tabItem">
                     <div>
@@ -12,86 +12,15 @@
                     </div>
                 </tab-item>
             </tab>
-        </div>
+        </div> -->
         <ul class="remind-list">
             <li>
                 <div class="item-lt">
                     <span>A55555</span>
                 </div>
                 <div class="item-rt">
-                    <x-button mini>￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../../assets/images/icon_chengjiao@2x.png">
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A55555</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini>￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../../assets/images/icon_chengjiao@2x.png">
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A55555</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini>￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../../assets/images/icon_chengjiao@2x.png">
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A55555</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini>￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../../assets/images/icon_chengjiao@2x.png">
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A55555</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini>￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../../assets/images/icon_chengjiao@2x.png">
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A55555</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini>￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../../assets/images/icon_chengjiao@2x.png">
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A55555</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini>￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../../assets/images/icon_chengjiao@2x.png">
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A55555</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini>￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../../assets/images/icon_chengjiao@2x.png">
+                    <span>12.12 12:00 即将开始</span>
+                    <x-button mini>取消提醒</x-button>
                 </div>
             </li>
         </ul>
@@ -164,8 +93,7 @@
                         border-top: 8px solid #0C3881;
                         background-color: transparent;
                     }
-                }
-                
+                }                
             }
         }
         .remind-list {
