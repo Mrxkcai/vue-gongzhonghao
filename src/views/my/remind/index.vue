@@ -1,38 +1,31 @@
 <template>
     <div class="remind">
         <div v-wechat-title="$route.meta.title"></div>
-        <!-- <div class="header-top">
-            <tab>
-                <tab-item v-for="n in 8" :key="n" :selected="n===1" @on-item-click="tabItem">
-                    <div>
-                        <span class="time">12-10 12:00</span></br>
-                        <span class="status-text">
-                            即将开始
-                        </span>
-                    </div>
-                </tab-item>
-            </tab>
-        </div> -->
-        <ul class="remind-list">
-            <li>
+        <no-data explain="暂无提醒" fontColor="#A5A8B4" containerHeight="9rem" v-if="!isRemindList"></no-data>
+        <ul class="remind-list" v-else>
+            <li v-for="n in remindList" :key="n.id">
                 <div class="item-lt">
-                    <span>A55555</span>
+                    <span>{{ n.number }}}</span>
                 </div>
                 <div class="item-rt">
-                    <span>12.12 12:00 即将开始</span>
+                    <span>{{ n.auctionDate }} 即将开始</span>
+
                     <x-button mini>取消提醒</x-button>
                 </div>
             </li>
         </ul>
+        
     </div>
 </template>
 
 <script>
     import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem } from 'vux'
-    import {} from '../../../service/api'
+    import { getRemindList } from '../../../service/api'
+    import noData from '../../../components/noData'
     export default {
         name: 'remind',
         components: {
+            noData,
             Tab, 
             TabItem, 
             Sticky, 
@@ -43,8 +36,17 @@
         },
         data() {
             return {
-                
+                remindList: [],
+                isRemindList: false,
             }
+        },
+        created() {
+            getRemindList().then(res => {
+                if(res.code == 200) {
+                    console.log(res)
+                    this.isRemindList = res.data
+                }
+            })
         },
         methods: {
             tabItem(i) {

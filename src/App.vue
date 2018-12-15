@@ -109,11 +109,30 @@
         content: "*";
         margin-right: 5px;
     }
+    .vux-tabbar-simple .weui-tabbar__label {
+        border-top: 3px solid transparent;
+    }
     .weui-bar__item_on span {
         display: block;
         width: 36px;
         height: 50px;
         margin: 0 auto;
+        box-sizing: border-box;
         border-top: 3px solid #002F7B;
+    }
+    .flex-box {
+        display: flex;
+        min-height: 100%;
+        flex-flow: row wrap;
+    }
+    .variable {
+        width: 100%;
+        height: 100px;
+        align-self: flex-start;
+    }
+    .bottom {
+        width: 100%;
+        height: 50px;
+        align-self: flex-end;
     }
 </style>

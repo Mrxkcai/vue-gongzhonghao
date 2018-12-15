@@ -27,8 +27,8 @@
                     </div>
                     <x-button 
                         type="primary" 
-                        :disabled=!isDisabled
-                        @click.native="changeIdentityInfo">
+                        :disabled=!canChangeIdentityInfo
+                        @click.native="changeIdentityInfoHandle">
                         确认修改
                     </x-button>
                 </div>
@@ -52,7 +52,8 @@
                                     style="padding-right:0;">
                                     <img slot="label" style="padding-right:10px;display:block;" src="../../../assets/images/icon_cellphone@2x.png" width="16" height="18">
                                 </x-input>
-                                <x-button class="sendcode-btn" mini type="warn">发送验证码</x-button>
+                                <x-button v-if="!show" mini style="width: 4.2rem;height:40px;margin-top:0;">{{count}} s</x-button>
+                                <x-button v-else class="sendcode-btn" mini type="warn" @click.native="getCode">发送验证码</x-button>
                             </div>
                             
                                 
@@ -66,11 +67,19 @@
             </popup>
         </div>
         </div>
+        <toast v-model="toast" :time=2000 type="text" width="auto" :text="toastText"></toast>
     </div>
 </template>
 
 <script>
-import { Cell, Group, XButton, Popup, XInput, TransferDomDirective as TransferDom } from 'vux'
+import { Cell, Group, XButton, Popup, XInput, Toast, TransferDomDirective as TransferDom } from 'vux'
+    import { send, verifyCode } from '../../../service/api'
+
+    let regList = {
+            Mobile: /^1[345789]\d{9}$/,
+            regIdNo: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
+        }
+
     export default {
         name: 'myInfo',
         directives: {
@@ -81,17 +90,22 @@ import { Cell, Group, XButton, Popup, XInput, TransferDomDirective as TransferDo
             Group,
             XButton,
             Popup,
-            XInput 
+            XInput,
+            Toast
         },
         data() {
             return {
+                toast: false,
+                toastText: '',
+                count: '',
+                timer: null,
+                show: true,
                 realName: '',
                 idCard: '',
                 mobile: '',
                 verifCode: 1234,  // 验证码
                 showIdentityInfo: false,
                 showTelInfo:  false,
-                isDisabled: false,
             }
         },
         created(opts) {
@@ -107,8 +121,43 @@ import { Cell, Group, XButton, Popup, XInput, TransferDomDirective as TransferDo
             changeTelInfo() {
                 this.showTelInfo = true;
             },
+            changeIdentityInfoHandle() {
+                
+            },
+            getCode() {
+                let mobile = this.mobile;
+                send({ mobile: mobile}).then(res => {
+                    if(res.code == 200) {
+                        const TIME_COUNT = 60;
+                        if (!this.timer) {
+                            this.count = TIME_COUNT;
+                            this.show = false;
+                            this.timer = setInterval(() => {
+                                if (this.count > 0 && this.count <= TIME_COUNT) {
+                                    this.count--;
+                                } else {
+                                    this.show = true;
+                                    clearInterval(this.timer);
+                                    this.timer = null;
+                                }
+                            }, 1000)
+                        }
+                    } else {
+                        this.toast = true;
+                        this.toastText = res.message
+                    }
+                })
+            }
         },
-        
+        computed: {
+            canChangeIdentityInfo: function() {
+                if(this.idCard == '' || this.realName =='' ) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+        }
 
     }
 </script>
