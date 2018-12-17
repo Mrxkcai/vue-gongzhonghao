@@ -1,5 +1,6 @@
 <template>
   <div class="compete-chat flex-box">
+      <!-- 顶部竞拍信息 -->
       <div class="compete-chat-top">
         <div class="now">
           <div>正在进行: <span class="end-time">预计 10:10:00 结束</span></div>
@@ -18,10 +19,11 @@
           </div>
         </div>
       </div>
-      <view-box ref="viewBox" @getScrollTop="getScrollTop" style="width:100%;">
+      <!-- 聊天室 -->
+      <view-box ref="chatRome" style="width:100%;" @scrollTo="scrollTo">
         <div class="variable">
           <div class="compete-chat-content">
-            <!-- <p v-for="i in 100">{{i}}</p> -->
+            <!-- 他人 -->
             <div class="other">
               <div>
                 <img class="avator" src="https://dn-coding-net-production-static.codehub.cn/9568ba84-1469-45b4-aa34-1f1fca86fbf2.jpg">
@@ -35,34 +37,48 @@
                   出价：2000元
                 </div>
               </div>
-              
             </div>
-            <div class="me">
-              
+            <div class="other">
+              <div>
+                <img class="avator" src="https://coding.net/static/project_icon/scenery-23.png">
+              </div>
+              <div class="chat-box">
+                <p>
+                  <span class="nickname">用户昵称</span>
+                  <span class="chat-time"> 1小时前</span>
+                </p>
+                <div class="chat-content">
+                  出价：2200元
+                </div>
+              </div>
+            </div>
+            <!-- 自己 -->
+            <div class="me" v-for="n in commentsList">
               <div class="chat-box">
                 <p>
                   <span class="chat-time"> 1小时前</span>
                   <span class="nickname">用户昵称</span>
                 </p>
                 <div class="chat-content">
-                  都是土豪啊，出价好高！！!666，土豪我们做朋友吧
+                  {{ n }}
                 </div>
               </div>
               <div>
-                <img class="avator" src="https://dn-coding-net-production-static.codehub.cn/9568ba84-1469-45b4-aa34-1f1fca86fbf2.jpg">
+                <img class="avator" src="https://coding.net/static/project_icon/scenery-18.png">
               </div>
             </div>
           </div>
         </div>
       </view-box>
+      <!-- footer -->
       <div class="compete-chat-bottom bottom">
         <div class="comments">
-          <x-input title='评论' placeholder="我来说几句" text-align="left" style="font-size:15px;"></x-input>
+          <x-input title='评论' placeholder="我来说几句" text-align="left"v-model="commentVal" @on-enter="commentHandle" style="font-size:15px;"></x-input>
         </div>
         <div class="offer">
           <div style="width: 60%;">
-            <x-input placeholder="每次最低加价20元" type="text" style="width:90%;font-size:15px;"></x-input>
-            <span class="plus-icon">+</span>
+            <x-input placeholder="每次最低加价20元" :show-clear="false" type="text" v-model="offer" style="font-size:15px;"></x-input>
+            <span class="plus-icon" @click="addPrice">+</span>
           </div>
           <div>
             <x-button type="warn" @click.native="nowOffer">立即出价</x-button>
@@ -85,18 +101,31 @@
     },
     data() {
       return {
-        currentPrice: '0.00',
+        currentPrice: '10.00',
+        commentVal: '',
+        commentsList: [],
+        offer: 0.00 // 出价
       }
     },
     methods: {
-      getScrollTop(e) {
-        console.log(e)
-      },
-      nowOffer() {
+      nowOffer() { // 立即出价
         console.log(1)
+      },
+      addPrice() { // 加价
+        this.offer += 20.00;
+      },
+      commentHandle() { // 发表评论
+        let contentText = this.commentVal;
+        if(contentText !=="") {
+          this.commentsList.push(contentText)
+          this.commentVal = "";
+        }
+
+      },
+      scrollTo() {
+        this.$refs.chatRome.scrollTo(1000)
       }
     }
-
   }  
 </script>
 
@@ -267,7 +296,7 @@
           align-items: center;
           .plus-icon {
             display: inline-block;
-            width: 68px;
+            min-width: 50px;
             height: 50px;
             color: #fff;
             font-size: 30px;

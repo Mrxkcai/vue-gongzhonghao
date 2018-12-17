@@ -74,6 +74,6 @@ const routes = [
 
 export default new Router({
     mode: 'history',
-    // base: '/statics/compete',
+    //base: '/statics/compete',
     routes: routes
 })
