@@ -162,12 +162,22 @@ import { Cell, Group, XButton, Popup, XInput, Toast, TransferDomDirective as Tra
     }
 </script>
 
-<style>
+<style scoped>
     .myInfo {
         padding: 11px 17px;
     }
 
     .custombottom {
         bottom: 35%!important;
+    }
+    .weui-cells {
+        margin-top: 0!important;
+        padding: 10px 15px;
+        border-radius: 10px;
+    }
+
+    .weui-cell {
+        padding: 10px 15px;
+        background-color: #fff;
     }
 </style>

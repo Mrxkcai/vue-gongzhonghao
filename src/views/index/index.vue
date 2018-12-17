@@ -60,7 +60,7 @@
                     <span>A77777</span>
                 </div>
                 <div class="item-rt">
-                    <x-button mini type="warn" class="remind-btn" @click.native="goCompeteList">去竞拍</x-button>
+                    <x-button mini type="warn" class="remind-btn" @click.native="goCompeteChat">去竞拍</x-button>
                     <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
                 </div>
             </li>
@@ -226,8 +226,8 @@
                     }
                 })
             },
-            goCompeteList() {
-                this.$router.push({ path: '/competeList', query: { id: 123 }})
+            goCompeteChat() {
+                this.$router.push({ path: '/competeChat', query: { id: 123 }})
             },
             goBuy(e) {
                 console.log(e.currentTarget.dataset.id)

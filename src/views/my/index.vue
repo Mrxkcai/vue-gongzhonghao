@@ -6,7 +6,7 @@
                 <img src="userInfo.headUrl">
                 <!-- <img src="https://wx.qlogo.cn/mmopen/vi_32/rvx1PxbCJIJKqdmscqnic4jDep3QibDjXYAAYbkibyyxn5EgvFaj2fG4a3HVLqglRKhScicPaMzbmS8W9nOBe1IHrA/132"> -->
             </div>
-            <p class="nickname">{{ userInfo.nickName }}</p>
+            <div class="nickname">{{ userInfo.nickName }}</div>
             <div class="my-container">
                 <group>
                     <cell title="我的个人资料" is-link @click.native="goMyInfo">
@@ -50,7 +50,7 @@
                 userInfo: Object
             }
         },
-        created() {
+        mounted() {
             getUserInfo().then(res => {
                 console.log(res)
                 if(res.code == 200) {
@@ -91,6 +91,7 @@
                 color: #fff;
                 font-size: .354rem;
                 font-weight: 500;
+                height: 24px;
                 line-height: 24px;
                 margin-bottom: 0.54rem;
             }
