@@ -18,3 +18,4 @@ export const getMarginLog = cab => get('/auction/user/marginLog', cab)          
 export const send = cab => post('/marathon/matchInfo/verify/send', cab)         // 发送短信验证码
 export const verifyCode = cab => post('/marathon/matchInfo/verifyCode', cab)    // 手机验证码有效性验证
 
+export const auctionList = cab => get('/auction/user/auctionList', cab)         // 用户的拍卖列表
