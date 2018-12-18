@@ -10,7 +10,7 @@
 		<p style="height: 44px;"></p>
 
 		<div v-show="tab1">
-			<div class="item" v-for=" i,index in 10 " :key="index">
+			<div class="item" v-for=" i,index in getData " :key="index">
 				<p class="inTime">预计结拍时间：<span>12.01 12:00</span></p>
 				<div class="clear">
 					<span class="brage">领先</span>
@@ -57,7 +57,7 @@
 
 		<!-- 带支付    S -->
 		<div v-show="tab2" class="willPay">
-			<div class="item" v-for=" i,index in 10 ">
+			<div class="item" v-for=" i,index in getData ">
 				<p class="inTime">预计结拍时间：<span>12.01 12:00</span></p>
 				<div class="clear">
 					<span class="brage">竞拍成功</span>
@@ -117,7 +117,7 @@
 
 		<!-- 已完成    S -->
 		<div v-show="tab3" class="finishedPay">
-			<div class="item" v-for=" i,index in 10 ">
+			<div class="item" v-for=" i,index in getData ">
 				<div class="clear" style="margin: 10px 0 0 0;">
 					<span class="brage">已成交</span>
 					<span class="tiemPower">2019年 西安国际马拉松 A77777 的使用权</span>
@@ -156,6 +156,8 @@
 			</div>
 		</div>
 		<!-- 已完成    E -->
+
+		<p v-show="isData" style="text-align:center;font-size:14px;color:#999;line-height:50px;">未查询到数据</p>
 	</div>
 </template>
 
@@ -172,6 +174,7 @@
 
 	import { auctionList } from '../../../service/api'
 	import axios from 'axios'
+
 	export default {
 		directives: {
 			TransferDom
@@ -194,7 +197,10 @@
 				showToast: false,
 				tab1: true,
 				tab2: false,
-				tab3: false
+				tab3: false,
+				status:'AUCTION',
+				isData:false,
+				getData:[]
 			}
 		},
 		methods: {
@@ -256,15 +262,27 @@
 			},
 
 			init(){
-				auctionList().then(res => {
+				
+				var that = this;
+				// console.log(that.json)
+				var params = {
+					status:that.status
+				};
+				auctionList(params).then(res => {
 					console.log(res)
+					if(res.status == "success"){
+						if(res.code == 404){
+							that.isData = true;
+						}else if(res.code == 200){
+							that.isData = false;
+							that.getData = res.data;
+						}
+					}else{
+						console.log(res.message)
+					}
 				});
 
-				// axios.get('https://wxcs.nuoweibd.com/marathon/auction/user/auctionList',{
-				// 	params:{'status':'AUCTION'}
-				// }).then(res => {
-				// 	console.log(res)
-				// })
+				
 			}
 
 		},
