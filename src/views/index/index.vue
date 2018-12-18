@@ -2,7 +2,7 @@
     <div class="index">
         <div v-wechat-title="$route.meta.title"></div>
         <div class="header-top">
-            <tab>
+            <tab v-model="index">
                 <tab-item v-for="(n,i) in tabItems" :key="i" :selected="i===3" @on-item-click="tabItem">
                     <div>
                         <span class="time">{{ n.time }}</span></br>
@@ -13,7 +13,7 @@
                 </tab-item>
             </tab>
         </div>
-        <div class="now-action">
+        <div class="now-action" v-show="index == 2">
             <div class="action-endtime">
                 <img src="../../assets/images/img_bg_title@2x.png">
                 <div class="endtime">
@@ -27,54 +27,86 @@
                 <span>保证金： 20元 (可退)</span>
             </div>
         </div>
-        <ul class="index-list">
-            <li>
-                <div class="item-lt">
-                    <span>A33333</span>
+
+        <swiper v-model="index" :show-dots="false">
+            <swiper-item v-for="item in tabItems">
+                <div class="tab-swiper vux-center">
+                    <ul class="index-list" v-if="index == 0">
+                        <li>
+                            <div class="item-lt">
+                                <span>A55555</span>
+                            </div>
+                            <div class="item-rt">
+                                <x-button mini style="color:#fff;">￥200</x-button>
+                                <span>12-12 12:00</span>
+                                <img src="../../assets/images/icon_chengjiao@2x.png">
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="index-list" v-else-if="index == 1">
+                        <li>
+                            <div class="item-lt">
+                                <span>A55555</span>
+                            </div>
+                            <div class="item-rt">
+                                <x-button mini style="color:#fff;">￥200</x-button>
+                                <span>12-12 12:00</span>
+                                <img src="../../assets/images/icon_chengjiao@2x.png">
+                            </div>
+                        </li>
+                    </ul> 
+                    <ul class="index-list" v-else-if="index == 2">
+                        <li>
+                            <div class="item-lt">
+                                <span>A77777</span>
+                            </div>
+                            <div class="item-rt">
+                                <x-button mini type="warn" class="remind-btn" @click.native="goCompeteChat">去竞拍</x-button>
+                                <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-lt">
+                                <span>A55555</span>
+                            </div>
+                            <div class="item-rt">
+                                <x-button mini style="color:#fff;">￥200</x-button>
+                                <span>12-12 12:00</span>
+                                <img src="../../assets/images/icon_chengjiao@2x.png">
+                            </div>
+                        </li>
+                    </ul>
+                    <ul class="index-list" v-else-if="index == 3 || 4">
+                        <li >
+                            <div class="item-lt">
+                                <span>A33333</span>
+                            </div>
+                            <div class="item-rt">
+                                <span> <span class="focus">980</span> 人已关注</span>
+                                <x-button 
+                                    mini type="warn" 
+                                    class="remind-btn" 
+                                    data-auctionNumberId="1" 
+                                    data-categoryId="1"
+                                    @click.native="remindMe">
+                                        提醒我
+                            </x-button>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="item-lt">
+                                <span>A66666</span>
+                            </div>
+                            <div class="item-rt">
+                                <span> <span class="focus">8000</span> 人已关注</span>
+                                <x-button mini class="subscribed-btn">已订阅</x-button>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
-                <div class="item-rt">
-                    <span> <span class="focus">980</span> 人已关注</span>
-                    <x-button mini type="warn" class="remind-btn">提醒我</x-button>
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A66666</span>
-                </div>
-                <div class="item-rt">
-                    <span> <span class="focus">8000</span> 人已关注</span>
-                    <x-button mini class="subscribed-btn">已订阅</x-button>
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A77777</span>
-                </div>
-                <div class="item-rt">
-                    <span> <span class="focus">980</span> 人已关注</span>
-                    <x-button mini type="warn" class="remind-btn">提醒我</x-button>
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A77777</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini type="warn" class="remind-btn" @click.native="goCompeteChat">去竞拍</x-button>
-                    <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
-                </div>
-            </li>
-            <li>
-                <div class="item-lt">
-                    <span>A55555</span>
-                </div>
-                <div class="item-rt">
-                    <x-button mini style="color:#fff;">￥200</x-button>
-                    <span>12-12 12:00</span>
-                    <img src="../../assets/images/icon_chengjiao@2x.png">
-                </div>
-            </li>
-        </ul>
+            </swiper-item>
+        </swiper>
+        
         <!-- 验证码 model -->
         <div v-transfer-dom>
             <popup v-model="showTelInfo" is-transparent :hide-on-blur=false class="custombottom">
@@ -140,7 +172,7 @@
 <script>
     import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, Checklist, TransferDomDirective as TransferDom } from 'vux'
     import nwFooter from '../../components/nwFooter'
-    import  { login, getAuctionNumber } from '../../service/api'
+    import  { login, getAuctionNumber, getRemind } from '../../service/api'
     import { Storage } from '@/utils/utils'
     export default {
         name: 'index',
@@ -170,6 +202,7 @@
         },
         data() {
             return {
+                index: 3,
                 commonList: [
                     '我同意2019年限国际马拉松参赛号使用权 <span style="color:#F17F1A;text-decoration: underline;">购买协议</span>', 
                     '为确保您顺利参赛，您授权提供以上身份证明信息'
@@ -179,9 +212,6 @@
                 showTelInfo: false,
                 authCode: '',
                 tabItems: [{
-                    time: '12-12 08:00',
-                    status: '已结束'
-                },{
                     time: '12-12 09:00',
                     status: '已结束'
                 },{
@@ -203,10 +233,9 @@
             login({mobile:1234,code:1234}).then(res => {
                 if(res.code == 200) {
                     this.showTelInfo = false;
-                    console.log(res.data)
                     Storage.set('refreshToken', res.data.refreshToken);
                     Storage.set('token', res.data.token)
-                    // this.getAuctions()
+                    this.getAuctions()
                 } else {
                     this.showTelInfo = true;
                 }
@@ -223,7 +252,6 @@
                     pageSize: 100
                 };
                 getAuctionNumber(params).then(res => {
-                    console.log(res)
                     if(res.code !== 401) {
                     }
                 })
@@ -234,6 +262,16 @@
             goBuy(e) {
                 console.log(e.currentTarget.dataset.id)
                 this.payModel = true;
+            },
+            remindMe(e) { // 提醒我
+                console.log(e)
+                let auctionNumberId = e.target.dataset.auctionNumberId;
+                let categoryId = e.target.dataset.categoryId;
+                getRemind({auctionNumberId, categoryId}).then(res => {
+                    if(res.code == 200) {
+
+                    }
+                })
             }
         }
     }
@@ -283,63 +321,71 @@
                 
             }
         }
-        .index-list {
-            padding: 0px 17px;
-            margin-bottom: 50px;
-            li {
-                display: flex;
-                align-items: center;
-                width: 100%;
-                height: 1.6rem;
-                margin-top: 9px;
-                background: url('../../assets/images/img_bg_1.png') no-repeat center;
-                background-size: cover;
-                .item-lt {
-                    width: 30%;
-                    margin-left: 0.4rem;
-                    color: #192137;
-                    font-size: 0.45rem;
-                    font-weight: bold;
-                }
-                .item-rt {
-                    width: 70%;
-                    display: flex;
-                    justify-content: space-around;
-                    padding: 0 0.1rem;
-                    align-items: center;
-                    img {
-                        width: 1.2rem;
-                        height: 1.2rem;
-                    }
-                    span {
-                        color: #CBCED5;
-                    }
-                    .weui-btn {
-                        margin: 0;
-                        font-size: 0.3rem;
-                        
-                        height: 28px;
-                        line-height: 28px;
-                        border-radius: 16px;
-                    }
-                    .subscribed-btn {
-                        color: #fff;
-                        background-color: #D8DBE0;
-                    }
+        .vux-slider {
+            overflow: visible;
+            .vux-swiper {
+                overflow: visible;
+                .index-list {
+                    padding: 10px 17px;
+                    margin-bottom: 50px;
+                    li {
+                        display: flex;
+                        align-items: center;
+                        width: 100%;
+                        height: 1.6rem;
+                        margin-top: 9px;
+                        background: url('../../assets/images/img_bg_1.png') no-repeat center;
+                        background-size: cover;
+                        .item-lt {
+                            width: 30%;
+                            margin-left: 0.4rem;
+                            color: #192137;
+                            font-size: 0.45rem;
+                            font-weight: bold;
+                        }
+                        .item-rt {
+                            width: 70%;
+                            display: flex;
+                            justify-content: space-around;
+                            padding: 0 0.1rem;
+                            align-items: center;
+                            img {
+                                width: 1.2rem;
+                                height: 1.2rem;
+                            }
+                            span {
+                                color: #CBCED5;
+                            }
+                            .weui-btn {
+                                margin: 0;
+                                font-size: 0.3rem;
+                                
+                                height: 28px;
+                                line-height: 28px;
+                                border-radius: 16px;
+                            }
+                            .subscribed-btn {
+                                color: #fff;
+                                background-color: #D8DBE0;
+                            }
 
-                    .focus {
-                        color: #fff;
-                        color: #F0A800;
-                        font-size: 18px;
-                        font-weight: 500;
-                    }
-                    .buy-btn {
-                        color: #F0A800;
-                        border: 1px solid #F0A800;
+                            .focus {
+                                color: #fff;
+                                color: #F0A800;
+                                font-size: 18px;
+                                font-weight: 500;
+                            }
+                            .buy-btn {
+                                color: #F0A800;
+                                border: 1px solid #F0A800;
+                            }
+                        }
                     }
                 }
             }
+            
         }
+        
         .now-action {
             padding: 23px 0 0 0;
             div {

@@ -32,26 +32,20 @@ axios.interceptors.request.use(
 // http response 拦截器
 axios.interceptors.response.use(
     response => {
-            Storage.set('token', response.headers.token)
-            Storage.set('refreshToken', response.headers.refreshToken)
+        switch (response.data.code) {
+        case 401:
+            // 返回 401 清除token信息并跳转到登录页面
+            Storage.clear()
+            // 只有在当前路由不是登录页面才跳转
+            router.currentRoute.path !== '/' &&
+            router.replace({
+                path: '/'
+            })
+        }
+        // Storage.set('token', response.headers.token)
+        // Storage.set('refreshToken', response.headers.refreshToken)
         return response
     }, error => {
-        if (error.response) {
-            switch (error.response.code) {
-            case 401:
-                // 返回 401 清除token信息并跳转到登录页面
-                Storage.clear()
-                alert('401')
-                // 只有在当前路由不是登录页面才跳转
-                router.currentRoute.path !== '/' &&
-                    router.replace({
-                        path: '/',
-                        query: {
-                            redirect: router.currentRoute.path
-                        }
-                    })
-            }
-        }
         return Promise.reject(error.response.data) // 返回接口返回的错误信息
 })
 
