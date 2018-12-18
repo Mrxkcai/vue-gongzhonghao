@@ -8,6 +8,7 @@ import CustomService from '../views/my/customerService'
 import Remind from '../views/my/remind'
 import Compete from '../views/my/compete'
 import CompeteChat from '../views/competeChat'
+import { Storage } from '@/utils/utils'
 
 Vue.use(Router)
 
@@ -22,13 +23,17 @@ const routes = [
     }, {
         path: '/competeChat',
         name: 'competeChat',
+        meta: {
+            requireAuth: true
+        },
         component: CompeteChat
     }, {
         path: '/my',
         name: 'my',
         component: My,
         meta: {
-            title: '我的'
+            title: '我的',
+            requireAuth: true
         }
     }, {
         path: '/myInfo',
@@ -42,7 +47,8 @@ const routes = [
         component: Deposit,
         name: 'deposit',
         meta: {
-            title: '我的保证金'
+            title: '我的保证金',
+            requireAuth: true
         }
     }, {
         path: '/customerService',
@@ -56,14 +62,16 @@ const routes = [
         component: Remind,
         name: 'remind',
         meta: {
-            title: '我的提醒'
+            title: '我的提醒',
+            requireAuth: true
         }
     }, {
         path: '/compete',
         component: Compete,
         name: 'compete',
         meta: {
-            title: '我的拍卖'
+            title: '我的拍卖',
+            requireAuth: true
         }
     }, {
         path: '*',
@@ -71,9 +79,26 @@ const routes = [
         component: Index
     }
 ]
-
-export default new Router({
+const router = new Router({
     mode: 'history',
-    //base: '/statics/compete',
+    // base: '/statics/compete',
     routes: routes
 })
+
+router.beforeEach((to, from, next) => {
+    let token = Storage.get('token').data
+    let refreshToken = Storage.get('refreshToken').data
+    if (to.meta.requireAuth) {
+        if (refreshToken !== undefined && token !== undefined) {
+            next()
+        } else {
+            next({
+                path: '/'
+            })
+        }
+    } else {
+        next()
+    }
+})
+
+export default router

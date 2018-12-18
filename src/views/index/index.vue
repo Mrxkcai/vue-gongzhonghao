@@ -141,6 +141,7 @@
     import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, Checklist, TransferDomDirective as TransferDom } from 'vux'
     import nwFooter from '../../components/nwFooter'
     import  { login, getAuctionNumber } from '../../service/api'
+    import { Storage } from '@/utils/utils'
     export default {
         name: 'index',
         directives: {
@@ -198,17 +199,18 @@
                 }]
             }
         },
-        mounted() {
-            login({mobile:123,code:1234}).then(res => {
+        created() {
+            login({mobile:1234,code:1234}).then(res => {
                 if(res.code == 200) {
                     this.showTelInfo = false;
-                    this.getAuctions()
+                    console.log(res.data)
+                    Storage.set('refreshToken', res.data.refreshToken);
+                    Storage.set('token', res.data.token)
+                    // this.getAuctions()
                 } else {
                     this.showTelInfo = true;
                 }
-                
             })
-            
         },
         methods: {
             tabItem(i) {
