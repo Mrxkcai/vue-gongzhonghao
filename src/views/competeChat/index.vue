@@ -24,31 +24,17 @@
         <div class="variable">
           <div class="compete-chat-content">
             <!-- 他人 -->
-            <div class="other">
+            <div class="other" v-for="n in otherLists">
               <div>
                 <img class="avator" src="https://dn-coding-net-production-static.codehub.cn/9568ba84-1469-45b4-aa34-1f1fca86fbf2.jpg">
               </div>
               <div class="chat-box">
                 <p>
-                  <span class="nickname">用户昵称</span>
-                  <span class="chat-time"> 1小时前</span>
+                  <span class="nickname">{{ n.othername }}</span>
+                  <span class="chat-time"> {{ n.otherctime }}</span>
                 </p>
                 <div class="chat-content">
-                  出价：2000元
-                </div>
-              </div>
-            </div>
-            <div class="other">
-              <div>
-                <img class="avator" src="https://coding.net/static/project_icon/scenery-23.png">
-              </div>
-              <div class="chat-box">
-                <p>
-                  <span class="nickname">用户昵称</span>
-                  <span class="chat-time"> 1小时前</span>
-                </p>
-                <div class="chat-content">
-                  出价：2200元
+                  {{ n.othercontent }}
                 </div>
               </div>
             </div>
@@ -57,7 +43,7 @@
               <div class="chat-box">
                 <p>
                   <span class="chat-time"> 1小时前</span>
-                  <span class="nickname">用户昵称</span>
+                  <span class="nickname">{{ username }}</span>
                 </p>
                 <div class="chat-content">
                   {{ n }}
@@ -83,14 +69,16 @@
           <div>
             <x-button type="warn" @click.native="nowOffer">立即出价</x-button>
           </div>
-          
         </div>
       </div>
   </div>
 </template>
-
 <script>
   import { ViewBox, XInput, XButton } from 'vux' 
+  import { sign, getChatRoom, getImInfo } from '@/service/api'
+  /* eslint-disable */
+  
+  let JIM = new JMessage();
 
   export default {
     name: 'competeChat',
@@ -101,11 +89,43 @@
     },
     data() {
       return {
+        appKey: '95d9177779dbbe2d94375e96',
+        randomStr: '', // 随机字符串   
+        timestamp: '', // 当初时间戳
+        signature: '', // 签名
+        flag: '1',     // 是否启用消息记录漫游，默认 0 否，1 是
+        roomId: '12909551',
+        password: '',
+        username: '',
+        otherLists: [],  // 消息列表
         currentPrice: '10.00',
         commentVal: '',
         commentsList: [],
         offer: 0.00 // 出价
       }
+    },
+    created() {
+      sign().then(res => {
+        if(res.code == 200) {
+          this.randomStr = res.data.random_str;
+          this.signature = res.data.signature;
+          this.timestamp = res.data.timestamp;
+          this.flag =  res.data.flag;
+          this.init()  // 初始化
+        }
+      })
+      getImInfo().then(res => { // 获取当前登录用户的极光im账号
+        if(res.code == 200) {
+          this.username = res.data.username;
+          this.password = res.data.password;
+        }
+      })
+      getChatRoom({auctionNumberId: this.$route.query.id}).then(res => {
+        console.log(res)
+      })
+    },
+    mounted() {
+      
     },
     methods: {
       nowOffer() { // 立即出价
@@ -117,10 +137,112 @@
       commentHandle() { // 发表评论
         let contentText = this.commentVal;
         if(contentText !=="") {
+          this.addRoomText(contentText)
+          this.getConversation()
           this.commentsList.push(contentText)
           this.commentVal = "";
         }
+      },
+      loginRome() { // 登录聊天室
+        let that = this;
+        JIM.login({
+            'username': that.username,
+            'password': that.password
+        }).onSuccess(function (data) {
+            console.log('login  onSuccess :' + JSON.stringify(data));
+            that.getRoomInfo()
+            // 聊天室消息监听,监听到进入聊天室之前的所有消息（该事件会被多次调用，每条消息调用一次）
+            JIM.onRoomMsg(function (data) {
+                console.log('聊天室消息监听  : ' + JSON.stringify(data));
+                if(data) {
+                  let othername = data.from_username;
+                  let otherctime = data.content.create_time;
+                  let othercontent = data.content.msg_body.text;  // 消息内容
+                  let otherItem = { othername, otherctime, othercontent };
+                  that.otherLists.push(otherItem);
+                  console.log(that.otherLists)
+                }
+            });
 
+            // 聊天消息实时监听
+            JIM.onMsgReceive(function (data) {
+                // some code
+                console.log('聊天消息实时监听')
+                console.log('聊天消息实时监听  : ' + JSON.stringify(data));
+            });
+
+        }).onFail(function (data) {
+            console.log('login  error: ' + JSON.stringify(data));
+        }).onTimeout(function (data) {
+            console.log('login  timeout: ' + JSON.stringify(data));
+        });
+      },
+      init() {
+        let that = this;
+        let opts = {
+          "appkey" : this.appKey,
+          "random_str" : this.randomStr,
+          "signature" : this.signature,
+          "timestamp" : this.timestamp,
+          "flag" : 0
+        }
+        JIM.init(opts).onSuccess(function(data) {
+          console.log(data.message)
+          if(data.message == "success") { // 登录房间
+            that.loginRome()
+          }
+          }).onFail(function(data) {
+            console.log(data.message)
+        });
+      },
+      getRoomInfo() { // 获取房间信息
+        let that = this;
+        JIM.getChatroomInfo({
+            'id': this.roomId
+        }).onSuccess(function (data, msg) {
+            console.log('success: ' + JSON.stringify(data));
+            console.log('msg: ' + JSON.stringify(msg))
+            that.enterRoom()
+        }).onFail(function (data) {
+            console.log('error: ' + JSON.stringify(data));
+        }).onTimeout(function (data) {
+            console.log('onTimeout:' + JSON.stringify(data));
+        });
+      },
+      enterRoom() { // 进入房间
+        JIM.enterChatroom({'id': this.roomId}).onSuccess(function (data) {
+            console.log('加入聊天室 success: ' + JSON.stringify(data));
+        }).onFail(function (data) {
+            console.log('加入聊天室 error: ' + JSON.stringify(data));
+        });
+      }, 
+      exitRoom() {
+        JIM.exitChatroom({'id': this.roomId}).onSuccess(function (data) {
+            console.log('success: ' + JSON.stringify(data));
+        }).onFail(function (data) {
+            console.log('error: ' + JSON.stringify(data));
+        });
+      },
+      addRoomText(msg) {
+        JIM.sendChatroomMsg({
+            'target_rname': '接收者的展示名',
+            'target_rid': this.roomId,
+            'content': msg
+        }).onSuccess(function (data, msg) {
+            console.log('向聊天室发送消息 success data:' + JSON.stringify(data));
+            console.log('向聊天室发送消息 success msg:' + JSON.stringify(msg));
+        }).onFail(function (data) {
+            console.log('向聊天室发送消息 error:' + JSON.stringify(data));
+        });
+      },
+      getConversation() { // 获取会话列表
+          JIM.getConversation().onSuccess(function(data) {
+              console.log('success:' + JSON.stringify(data));
+        console.log('success: ' +JSON.stringify(data));
+          }).onFail(function(data) {
+              console.log('error:' + JSON.stringify(data));
+        console.log('error: ' +JSON.stringify(data));
+          });
       },
       scrollTo() {
         this.$refs.chatRome.scrollTo(1000)
@@ -215,6 +337,7 @@
               .chat-content {
                 position: relative;
                 font-size: 14px;
+                min-width: 50px;
                 color: #fff;
                 background-color: #6682B0;
                 border-radius: 6px;

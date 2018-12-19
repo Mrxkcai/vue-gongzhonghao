@@ -114,7 +114,7 @@
                     <div class="change-container">
                         <group>
                             <div style="display:flex;justify-content: space-between;align-items: center;">
-                                <x-input title="title" icon-type="clear" placeholder="请输入新手机号" style="padding-right:0;">
+                                <x-input title="title" icon-type="clear" v-model="mobile" placeholder="请输入新手机号" style="padding-right:0;">
                                     <img slot="label" style="padding-right:10px;display:block;" src="../../assets/images/icon_cellphone@2x.png" width="16" height="18">
                                 </x-input>
                                 <x-button class="sendcode-btn" mini type="warn">发送验证码</x-button>
@@ -125,7 +125,7 @@
                         </group>
                         <p style="color:#F17F1A;margin-top: 10px;"><span class="tips">注：</span>新用户登陆即注册</p>
                     </div>
-                    <x-button type="primary">登陆</x-button>
+                    <x-button type="primary" @click.native="logIn">登陆</x-button>
                 </div>
             </popup>
         </div>
@@ -209,8 +209,9 @@
                 ],
                 checklist001: [],
                 payModel: false,
-                showTelInfo: false,
+                showTelInfo: true,
                 authCode: '',
+                mobile:'',
                 tabItems: [{
                     time: '12-12 09:00',
                     status: '已结束'
@@ -230,18 +231,22 @@
             }
         },
         created() {
-            login({mobile:1234,code:1234}).then(res => {
-                if(res.code == 200) {
-                    this.showTelInfo = false;
-                    Storage.set('refreshToken', res.data.refreshToken);
-                    Storage.set('token', res.data.token)
-                    this.getAuctions()
-                } else {
-                    this.showTelInfo = true;
-                }
-            })
+            
         },
         methods: {
+            logIn() {
+                let params = { mobile:this.mobile,code:this.authCode };
+                login(params).then(res => {
+                    if(res.code == 200) {
+                        this.showTelInfo = false;
+                        Storage.set('refreshToken', res.data.refreshToken);
+                        Storage.set('token', res.data.token)
+                        this.getAuctions()
+                    } else {
+                        this.showTelInfo = true;
+                    }
+                })
+            },
             tabItem(i) {
                 console.log(i)
             },
@@ -257,7 +262,7 @@
                 })
             },
             goCompeteChat() {
-                this.$router.push({ path: '/competeChat', query: { id: 123 }})
+                this.$router.push({ path: '/competeChat', query: { id: 'A66666' }})
             },
             goBuy(e) {
                 console.log(e.currentTarget.dataset.id)
@@ -322,9 +327,9 @@
             }
         }
         .vux-slider {
-            overflow: visible;
+            overflow-y: visible;
             .vux-swiper {
-                overflow: visible;
+                overflow-y: visible;
                 .index-list {
                     padding: 10px 17px;
                     margin-bottom: 50px;

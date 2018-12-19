@@ -102,10 +102,11 @@
                 box-shadow:0px 2px 15px 0px rgba(81,81,87,0.3);
                 border-radius:10px;
                 margin: 0 auto;
-                padding: 0.685rem 0.3rem;
+                padding: 0.685rem 0.5rem;
                 background: #fff;
                 .weui-cell {
                     margin-top: -1px;
+                    padding: 10px 15px;
                     .vux-cell-primary {
                         height: 30px!important;
                     }
