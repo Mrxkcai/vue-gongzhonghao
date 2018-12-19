@@ -21,3 +21,4 @@ export const verifyCode = cab => post('/marathon/matchInfo/verifyCode', cab)    
 export const sign = cab => get('/im/sign', cab) // im签名信息获取
 export const getImInfo = cab => get('/marathon/user/imInfo', cab) // 获取当前登录用户的极光im账号
 export const getChatRoom = cab => get('/im/chatRoom', cab) // 根据号码id获取聊天室id(一个号码对应一个聊天室)
+export const auctionList = cab => get('/auction/user/auctionList', cab)         // 用户的拍卖列表
