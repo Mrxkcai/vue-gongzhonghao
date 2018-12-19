@@ -1,0 +1,86 @@
+{
+    "code": 200, 
+    "data": [
+      {
+        "endTime": "2018-12-18 18:23:53", 
+        "number": "A88800",  
+        "numberInfo": {  
+          "categoryId": "7",  
+          "categoryName": "7", 
+          "matchId": "1",    
+          "matchName": "2019年西安国际马拉松",  
+          "matchTypeId": "2",           
+          "matchTypeName": "半程马拉松", 
+          "numberId": "1"          
+        },
+        "paySuccess": true,    
+        "price": 1000,          
+        "top": true            
+      },
+      {
+        "endTime": "2018-12-18 18:23:53",  
+        "number": "A88801",   
+        "numberInfo": {  
+          "categoryId": "7",  
+          "categoryName": "7", 
+          "matchId": "1",    
+          "matchName": "2019年西安国际马拉松",  
+          "matchTypeId": "2",          
+          "matchTypeName": "半程马拉松", 
+          "numberId": "1"          
+        },
+        "paySuccess": false,   
+        "price": 100,           
+        "top": false            
+      },
+      {
+        "endTime": "2018-12-18 18:23:53",  
+        "number": "A88802",  
+        "numberInfo": {  
+          "categoryId": "7",  
+          "categoryName": "7", 
+          "matchId": "1",   
+          "matchName": "2019年西安国际马拉松",  
+          "matchTypeId": "2",          
+          "matchTypeName": "半程马拉松", 
+          "numberId": "1"         
+        },
+        "paySuccess": false,    
+        "price": 100,           
+        "top": false            
+      },
+      {
+        "endTime": "2018-12-18 18:23:53",  
+        "number": "A88803", 
+        "numberInfo": {  
+          "categoryId": "7",  
+          "categoryName": "7", 
+          "matchId": "1",    
+          "matchName": "2019年西安国际马拉松", 
+          "matchTypeId": "2",           
+          "matchTypeName": "半程马拉松",
+          "numberId": "1"          
+        },
+        "paySuccess": false,    
+        "price": 100,          
+        "top": false            
+      },
+      {
+        "endTime": "2018-12-18 18:23:53",  
+        "number": "A88804",  
+        "numberInfo": {  
+          "categoryId": "7", 
+          "categoryName": "7", 
+          "matchId": "1",    
+          "matchName": "2019年西安国际马拉松",  
+          "matchTypeId": "2",           
+          "matchTypeName": "半程马拉松", 
+          "numberId": "1"         
+        },
+        "paySuccess": false,    
+        "price": 100,           
+        "top": false            
+      }
+    ],
+    "status": "success"
+  }

@@ -11,17 +11,18 @@
 
 		<div v-show="tab1">
 			<div class="item" v-for=" i,index in getData " :key="index">
-				<p class="inTime">预计结拍时间：<span>12.01 12:00</span></p>
+				<p class="inTime">预计结拍时间：<span v-text="i.endTime?i.endTime:''"></span></p>
 				<div class="clear">
-					<span class="brage">领先</span>
-					<span class="tiemPower">2019年 西安国际马拉松 A99999 的使用权</span>
+					<span class="brage" v-if="i.top">领先</span>
+					<span class="brage" v-else> </span>
+					<span class="tiemPower">{{i.numberInfo.matchName?i.numberInfo.matchName:''}} {{i.number}} 的使用权</span>
 					<p style="clear: both;"></p>
 				</div>
 
 				<div class="clear nowMoney">
 					<span>当前价：</span>
 					<span>¥ </span>
-					<span>3000.00</span>
+					<span>{{i.price.toFixed(2)}}</span>
 					<span>查看</span>
 					<span @click="getIndex(index)">
 						<x-switch title="" style="width:70px"></x-switch>
@@ -58,17 +59,17 @@
 		<!-- 带支付    S -->
 		<div v-show="tab2" class="willPay">
 			<div class="item" v-for=" i,index in getData ">
-				<p class="inTime">预计结拍时间：<span>12.01 12:00</span></p>
+				<p class="inTime">预计结拍时间：<span v-text="i.endTime?i.endTime:''"></span></p>
 				<div class="clear">
-					<span class="brage">竞拍成功</span>
-					<span class="tiemPower">2019年 西安国际马拉松 A88888 的使用权</span>
+					<span class="brage" style="padding:0 2px;">竞拍成功</span>
+					<span class="tiemPower">{{i.numberInfo.matchName?i.numberInfo.matchName:''}} {{i.number}} 的使用权</span>
 					<p style="clear: both;"></p>
 				</div>
 
 				<div class="clear nowMoney tapePayment">
 					<span>结拍价：</span>
 					<span>¥ </span>
-					<span>3000.00</span>
+					<span>{{i.price.toFixed(2)}}</span>
 					<span>支付</span>
 					<span @click="getIndex(index)">
 						<x-switch title="" v-model="show2" style="width:70px"></x-switch>
@@ -85,22 +86,22 @@
 				<popup v-model="show2" @on-hide="log('hide')" @on-show="log('show')">
 					<div class="popup0">
 						<div>
-							<span class="tiemPower tiemPower2" style="width: 100%;text-align: center;margin: 17px 0 0 0;">2019年 西安国际马拉松
-								<span class="numberTip">A18888</span> 的使用权</span>
+							<span class="tiemPower tiemPower2" style="width: 100%;text-align: center;margin: 17px 0 0 0;">{{getDataInfo.numberInfo.matchName}}
+								<span class="numberTip">{{getDataInfo.number}}</span> 的使用权</span>
 							<p style="clear: both;"></p>
 
 							<div class="infoItem">
-								<p><span>姓名</span><span>王某某</span></p>
-								<p><span>证件号</span><span>610302199107202062</span></p>
-								<p><span>结拍价</span><span><span>¥ </span><span style="font-weight: 600;">3000</span></span></p>
-								<p><span>保证金</span><span><span style="color: #F17F1A;">-¥ </span><span style="font-weight: 600;color: #F17F1A;">20</span></span></p>
+								<p><span>姓名</span><span>{{userInfo.nickName}} </span></p>
+								<p><span>证件号</span><span>{{userInfo.idCard}} </span></p>
+								<p><span>结拍价</span><span><span>¥ </span><span style="font-weight: 600;">{{getDataInfo.price}} </span></span></p>
+								<p><span>保证金</span><span><span style="color: #F17F1A;">-¥ </span><span style="font-weight: 600;color: #F17F1A;">{{userInfo.auctionBondAmount}}</span></span></p>
 							</div>
 
 							<div class="confirmPay">
 								<span>总计：</span>
 								<span>¥</span>
-								<span>2980</span>
-								<button @click="confirmPay()">确认支付</button>
+								<span>{{getDataInfo.price - userInfo.auctionBondAmount}}</span>
+								<button @click="confirmPay(getDataInfo.price - userInfo.auctionBondAmount)">确认支付</button>
 							</div>
 						</div>
 					</div>
@@ -119,15 +120,16 @@
 		<div v-show="tab3" class="finishedPay">
 			<div class="item" v-for=" i,index in getData ">
 				<div class="clear" style="margin: 10px 0 0 0;">
-					<span class="brage">已成交</span>
-					<span class="tiemPower">2019年 西安国际马拉松 A77777 的使用权</span>
+					<span class="brage" v-if="i.paySuccess">已成交</span>
+					<span class="brage" v-else> </span>
+					<span class="tiemPower">{{i.numberInfo.matchName?i.numberInfo.matchName:''}} {{i.number}} 的使用权</span>
 					<p style="clear: both;"></p>
 				</div>
 
 				<div class="clear nowMoney">
 					<span>成交价：</span>
 					<span>¥ </span>
-					<span>3000.00</span>
+					<span>{{i.price.toFixed(2)}}</span>
 					<span>查看</span>
 					<span @click="getIndex(index)">
 						<x-switch title="" v-model="show3" style="width:70px"></x-switch>
@@ -141,14 +143,15 @@
 				<popup v-model="show3" @on-hide="log('hide')" @on-show="log('show')">
 					<div class="popup0">
 						<div>
-							<span class="brage brage3">已成交</span>
-							<span class="tiemPower">2019年 西安国际马拉松 <span class="numberTip">A77777</span> 的使用权</span>
+							<span class="brage brage3" v-if="getDataInfo.paySuccess">已成交</span>
+							<span class="brage brage3" v-else> </span>
+							<span class="tiemPower">{{getDataInfo.numberInfo.matchName}} <span class="numberTip">{{getDataInfo.number}}</span> 的使用权</span>
 							<p style="clear: both;"></p>
 
 							<div class="infoItem">
-								<p><span>姓名</span><span>王某某</span></p>
-								<p><span>证件号</span><span>610302199107202062</span></p>
-								<p><span>成交价</span><span><span>¥ </span><span style="font-weight: 600;">3000</span></span></p>
+								<p><span>姓名</span><span>{{userInfo.nickName}}</span></p>
+								<p><span>证件号</span><span>{{userInfo.idCard}}</span></p>
+								<p><span>成交价</span><span><span>¥ </span><span style="font-weight: 600;">{{getDataInfo.price}}</span></span></p>
 							</div>
 						</div>
 					</div>
@@ -173,7 +176,9 @@
 	} from 'vux'
 
 	import { auctionList } from '../../../service/api'
+	import { getUserInfo } from '../../../service/api'
 	import axios from 'axios'
+	import getData from './data.json'
 
 	export default {
 		directives: {
@@ -200,7 +205,26 @@
 				tab3: false,
 				status:'AUCTION',
 				isData:false,
-				getData:[]
+				getData:[],
+				// pageSize:5,		//后端说不需要分叶
+				// currentPage:1
+				getDataInfo:{
+					"endTime": "2018-12-18 18:23:53", 
+					"number": "A88800",  
+					"numberInfo": {  
+						"categoryId": "7",  
+						"categoryName": "7", 
+						"matchId": "1",    
+						"matchName": "2019年西安国际马拉松",  
+						"matchTypeId": "2",           
+						"matchTypeName": "半程马拉松", 
+						"numberId": "1"          
+					},
+					"paySuccess": false,    
+					"price": 100,          
+					"top": true            
+				},
+				userInfo:{}
 			}
 		},
 		methods: {
@@ -210,18 +234,25 @@
 					this.tab1 = true
 					this.tab2 = false
 					this.tab3 = false
+					this.status = "AUCTION"
 				} else if (index == 1) {
 					this.tab1 = false
 					this.tab2 = true
 					this.tab3 = false
+					this.status = "PAY"
 				} else if (index == 2) {
 					this.tab1 = false
 					this.tab2 = false
 					this.tab3 = true
-				}
-			},
-			getIndex() {
+					this.status = "PAY"
+				};
 
+				//查询数据
+				this.init();
+			},
+			getIndex(index) {
+				this.getDataInfo = this.getData[index]
+				console.log(this.getDataInfo)
 			},
 			log(str) {
 				// console.log(str)
@@ -275,8 +306,15 @@
 							that.isData = true;
 						}else if(res.code == 200){
 							that.isData = false;
-							that.getData = res.data;
+							if(res.data.length){
+								that.getData = res.data;
+							};
 						}
+
+						//本地演示数据
+						// that.getData = getData.data;
+						// console.log(that.getData)
+
 					}else{
 						console.log(res.message)
 					}
@@ -297,7 +335,14 @@
 			};
 
 			this.init();
-
+			
+			getUserInfo().then(res => {
+				console.log(2334)
+				console.log(res)
+				if(res.code == 200){
+					this.userInfo = res.data;
+				};
+			});
 
 		},
 		destroyed() {
@@ -358,7 +403,7 @@
 
 	.brage {
 		@d();
-		width: 37px;
+		min-width: 37px;
 		height: 15px;
 		background: rgba(240, 168, 0, 1);
 		border-radius: 3px;
