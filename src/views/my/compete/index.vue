@@ -244,7 +244,7 @@
 					this.tab1 = false
 					this.tab2 = false
 					this.tab3 = true
-					this.status = "PAY"
+					this.status = "FINISH"
 				};
 
 				//查询数据
