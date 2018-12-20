@@ -81,7 +81,7 @@ const routes = [
 ]
 const router = new Router({
     mode: 'history',
-    base: '/statics/compete',
+    // base: '/statics/compete',
     routes: routes
 })
 
