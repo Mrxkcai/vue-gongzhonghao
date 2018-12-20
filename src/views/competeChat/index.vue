@@ -24,8 +24,8 @@
         <div class="variable">
           <div class="compete-chat-content" v-for="n in chatLists">
             <!-- 自己 -->
-            <div class="me" >
-              <div class="chat-box" v-if="username == n.othername">
+            <div class="me" v-if="username == n.othername">
+              <div class="chat-box">
                 <p>
                   <span class="chat-time"> {{ n.otherctime }}</span>
                   <span class="nickname">{{ username }}</span>
@@ -38,8 +38,9 @@
                 <img class="avator" src="https://coding.net/static/project_icon/scenery-18.png">
               </div>
             </div>
+
             <!-- 他人 -->
-            <div class="other">
+            <div class="other" v-else>
               <div>
                 <img class="avator" src="https://dn-coding-net-production-static.codehub.cn/9568ba84-1469-45b4-aa34-1f1fca86fbf2.jpg">
               </div>
@@ -59,7 +60,7 @@
       <!-- footer -->
       <div class="compete-chat-bottom bottom">
         <div class="comments">
-          <x-input title='评论' placeholder="我来说几句" text-align="left"v-model="commentVal" @on-enter="commentHandle" style="font-size:15px;"></x-input>
+          <x-input title='评论' placeholder="我来说几句" text-align="left" v-model="commentVal" @on-enter="commentHandle" style="font-size:15px;"></x-input>
         </div>
         <div class="offer">
           <div style="width: 60%;">
@@ -149,9 +150,11 @@
       })
     },
     mounted() {
-      
+      //  获取历史记录
+        this.getConversation();
     },
     destroyed() {
+
       this.exitRoom()
     },
     methods: {
@@ -183,12 +186,11 @@
             JIM.onRoomMsg(function (data) {
                 console.log('聊天室消息监听  : ' + JSON.stringify(data));
                 if(data) {
-                  let othername = data.content.from_username;
+                  let othername = data.content.from_id;
                   let otherctime = data.content.create_time;
                   let othercontent = data.content.msg_body.text;  // 消息内容
-                  let otherItem = { othername, otherctime, othercontent };
+                  let otherItem = { othername:othername, otherctime, othercontent };
                   that.chatLists.push(otherItem);
-                  console.log(that.chatLists)
                 }
             });
 
@@ -244,6 +246,7 @@
             console.log('加入聊天室 error: ' + JSON.stringify(data));
         });
       }, 
+      //推出房间
       exitRoom() {
         JIM.exitChatroom({'id': this.roomId}).onSuccess(function (data) {
             console.log('success: ' + JSON.stringify(data));
@@ -251,19 +254,21 @@
             console.log('error: ' + JSON.stringify(data));
         });
       },
+
       addRoomText(msg) {
+        
         let that = this;
         JIM.sendChatroomMsg({
             'target_rname': '接收者的展示名',
             'target_rid': this.roomId,
             'content': msg
         }).onSuccess(function (data, msg) {
-            // console.log('向聊天室发送消息 success data:' + JSON.stringify(data));
             console.log('向聊天室发送消息 success msg:' + JSON.stringify(msg));
-            let othername = msg.from_id;
+            let othername = msg.content.from_id;
             let otherctime = msg.content.create_time;
             let othercontent = msg.content.msg_body.text;  // 消息内容
-            let otherItem = { othername, otherctime, othercontent };
+            let otherItem = { othername:othername, otherctime, othercontent };
+            console.log(othername)
             that.chatLists.push(otherItem);
         }).onFail(function (data) {
             console.log('向聊天室发送消息 error:' + JSON.stringify(data));
