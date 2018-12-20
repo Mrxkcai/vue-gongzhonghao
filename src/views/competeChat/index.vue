@@ -3,28 +3,43 @@
       <!-- 顶部竞拍信息 -->
       <div class="compete-chat-top">
         <div class="now">
-          <div>正在进行: <span class="end-time">预计 10:10:00 结束</span></div>
+          <div>正在进行: <span class="end-time">预计 {{createDate}} 结束</span></div>
           <router-link to="./">购买协议</router-link>
         </div>
         <p class="">
-          2019年西安国际马拉松 <span class="compete-number">A88888</span> 的使用权
+          {{matchName}} <span class="compete-number">{{ name }}</span> 的使用权
         </p>
         <div class="current-content">
           <div>
-            <span class="current-price">{{ currentPrice }}</span> 当前价 (元)
+            <span class="current-price">{{ currentAmount }}</span> 当前价 (元)
           </div>
           <div>
-            <p>围观：223次</p>
-            <p>出价：10人</p>
+            <p>围观：{{numberExtend.viewCount}}次</p>
+            <p>出价：{{numberExtend.auctionCount}}人</p>
           </div>
         </div>
       </div>
       <!-- 聊天室 -->
       <view-box ref="chatRome" style="width:100%;" @scrollTo="scrollTo">
         <div class="variable">
-          <div class="compete-chat-content">
+          <div class="compete-chat-content" v-for="n in chatLists">
+            <!-- 自己 -->
+            <div class="me" >
+              <div class="chat-box" v-if="username == n.othername">
+                <p>
+                  <span class="chat-time"> {{ n.otherctime }}</span>
+                  <span class="nickname">{{ username }}</span>
+                </p>
+                <span class="chat-content">
+                  {{ n.othercontent }}
+                </span>
+              </div>
+              <div>
+                <img class="avator" src="https://coding.net/static/project_icon/scenery-18.png">
+              </div>
+            </div>
             <!-- 他人 -->
-            <div class="other" v-for="n in otherLists">
+            <div class="other">
               <div>
                 <img class="avator" src="https://dn-coding-net-production-static.codehub.cn/9568ba84-1469-45b4-aa34-1f1fca86fbf2.jpg">
               </div>
@@ -33,24 +48,9 @@
                   <span class="nickname">{{ n.othername }}</span>
                   <span class="chat-time"> {{ n.otherctime }}</span>
                 </p>
-                <div class="chat-content">
+                <span class="chat-content">
                   {{ n.othercontent }}
-                </div>
-              </div>
-            </div>
-            <!-- 自己 -->
-            <div class="me" v-for="n in commentsList">
-              <div class="chat-box">
-                <p>
-                  <span class="chat-time"> 1小时前</span>
-                  <span class="nickname">{{ username }}</span>
-                </p>
-                <div class="chat-content">
-                  {{ n }}
-                </div>
-              </div>
-              <div>
-                <img class="avator" src="https://coding.net/static/project_icon/scenery-18.png">
+                </span>
               </div>
             </div>
           </div>
@@ -71,11 +71,12 @@
           </div>
         </div>
       </div>
+      <toast v-model="showToast" position="top" type="text" :time=1500 text="进入房间"></toast>
   </div>
 </template>
 <script>
-  import { ViewBox, XInput, XButton } from 'vux' 
-  import { sign, getChatRoom, getImInfo } from '@/service/api'
+  import { ViewBox, XInput, XButton, Toast } from 'vux' 
+  import { sign, getChatRoom, getImInfo, getAuctionInfo } from '@/service/api'
   /* eslint-disable */
   
   let JIM = new JMessage();
@@ -85,10 +86,20 @@
     components: {
       ViewBox,
       XInput,
-      XButton
+      XButton,
+      Toast
     },
     data() {
       return {
+        createDate: '',
+        matchName: '',      // 赛事名称 
+        currentAmount: '0', // 当前价格
+        addAmount: 0,       // 加价幅度
+        name: '',           // 号码
+        status: 0,          // 状态 0 正常状态 1 锁定状态 2 等待支付状态 3 交易成功状态
+        numberExtend: {
+        },
+        showToast: true,
         appKey: '95d9177779dbbe2d94375e96',
         randomStr: '', // 随机字符串   
         timestamp: '', // 当初时间戳
@@ -97,7 +108,7 @@
         roomId: '12909551',
         password: '',
         username: '',
-        otherLists: [],  // 消息列表
+        chatLists: [],  // 消息列表
         currentPrice: '10.00',
         commentVal: '',
         commentsList: [],
@@ -105,6 +116,19 @@
       }
     },
     created() {
+      getAuctionInfo({auctionNumberId: '1'}).then(res => {
+        
+        if(res.code == 200) {
+          this.addAmount = res.data.addAmount;
+          this.amount = res.data.amount;
+          this.name = res.data.name;
+          this.status = res.data.status;
+          this.numberExtend = res.data.numberExtend;
+          this.matchName = res.data.numberInfo.matchName
+          this.createDate = res.data.createDate;
+        }
+      })
+
       sign().then(res => {
         if(res.code == 200) {
           this.randomStr = res.data.random_str;
@@ -121,11 +145,14 @@
         }
       })
       getChatRoom({auctionNumberId: this.$route.query.id}).then(res => {
-        console.log(res)
+        
       })
     },
     mounted() {
       
+    },
+    destroyed() {
+      this.exitRoom()
     },
     methods: {
       nowOffer() { // 立即出价
@@ -138,8 +165,8 @@
         let contentText = this.commentVal;
         if(contentText !=="") {
           this.addRoomText(contentText)
-          this.getConversation()
-          this.commentsList.push(contentText)
+          // this.getConversation()
+          // this.commentsList.push(contentText)
           this.commentVal = "";
         }
       },
@@ -150,17 +177,18 @@
             'password': that.password
         }).onSuccess(function (data) {
             console.log('login  onSuccess :' + JSON.stringify(data));
+            
             that.getRoomInfo()
             // 聊天室消息监听,监听到进入聊天室之前的所有消息（该事件会被多次调用，每条消息调用一次）
             JIM.onRoomMsg(function (data) {
                 console.log('聊天室消息监听  : ' + JSON.stringify(data));
                 if(data) {
-                  let othername = data.from_username;
+                  let othername = data.content.from_username;
                   let otherctime = data.content.create_time;
                   let othercontent = data.content.msg_body.text;  // 消息内容
                   let otherItem = { othername, otherctime, othercontent };
-                  that.otherLists.push(otherItem);
-                  console.log(that.otherLists)
+                  that.chatLists.push(otherItem);
+                  console.log(that.chatLists)
                 }
             });
 
@@ -224,13 +252,19 @@
         });
       },
       addRoomText(msg) {
+        let that = this;
         JIM.sendChatroomMsg({
             'target_rname': '接收者的展示名',
             'target_rid': this.roomId,
             'content': msg
         }).onSuccess(function (data, msg) {
-            console.log('向聊天室发送消息 success data:' + JSON.stringify(data));
+            // console.log('向聊天室发送消息 success data:' + JSON.stringify(data));
             console.log('向聊天室发送消息 success msg:' + JSON.stringify(msg));
+            let othername = msg.from_id;
+            let otherctime = msg.content.create_time;
+            let othercontent = msg.content.msg_body.text;  // 消息内容
+            let otherItem = { othername, otherctime, othercontent };
+            that.chatLists.push(otherItem);
         }).onFail(function (data) {
             console.log('向聊天室发送消息 error:' + JSON.stringify(data));
         });
@@ -334,8 +368,12 @@
             margin: 0 0 20px 0;
             .chat-box {
               padding-left: 17px;
+              p {
+                margin-bottom: 7px;
+              }
               .chat-content {
                 position: relative;
+                display: inline-block;
                 font-size: 14px;
                 min-width: 50px;
                 color: #fff;
@@ -362,11 +400,16 @@
             justify-content: flex-end;
             margin: 0 0 20px 0;
             .chat-box {
+              text-align: right;
+
               padding-right: 17px;
               p {
                 text-align: right;
+                margin-bottom: 7px;
               }
               .chat-content {
+                display: inline-block;
+                text-align: right;
                 margin-top: 7px;
                 position: relative;
                 font-size: 14px;

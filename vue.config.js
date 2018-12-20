@@ -15,7 +15,7 @@ module.exports = {
     // indexPath: 'myIndex.html',
     // 默认情况下，生成的静态资源在它们的文件名中包含了 hash 以便更好的控制缓存。你可以通过将这个选项设为 false 来关闭文件名哈希。(false的时候就是让原来的文件名不改变)
     // filenameHashing: false,
-    // lintOnSave: false,
+    lintOnSave: false,
     // 如果你想要在生产构建时禁用 eslint-loader，你可以用如下配置
     // lintOnSave: process.env.NODE_ENV !== 'production',
 

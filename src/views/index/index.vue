@@ -202,7 +202,7 @@
         },
         data() {
             return {
-                index: 3,
+                index: 2,
                 commonList: [
                     '我同意2019年限国际马拉松参赛号使用权 <span style="color:#F17F1A;text-decoration: underline;">购买协议</span>', 
                     '为确保您顺利参赛，您授权提供以上身份证明信息'
