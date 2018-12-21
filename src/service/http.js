@@ -35,12 +35,13 @@ axios.interceptors.response.use(
         switch (response.data.code) {
         case 401:
             // 返回 401 清除token信息并跳转到登录页面
-            Storage.clear()
+            // Storage.clear()
             // 只有在当前路由不是登录页面才跳转
             router.currentRoute.path !== '/' &&
             router.replace({
                 path: '/'
             })
+            console.log('401')
         }
         // Storage.set('token', response.headers.token)
         // Storage.set('refreshToken', response.headers.refreshToken)

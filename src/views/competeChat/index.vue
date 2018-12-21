@@ -78,6 +78,7 @@
 <script>
   import { ViewBox, XInput, XButton, Toast } from 'vux' 
   import { sign, getChatRoom, getImInfo, getAuctionInfo } from '@/service/api'
+  import { formatTime } from '../../utils/utils'
   /* eslint-disable */
   
   let JIM = new JMessage();

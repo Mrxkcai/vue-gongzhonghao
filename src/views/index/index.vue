@@ -3,7 +3,7 @@
         <div v-wechat-title="$route.meta.title"></div>
         <div class="header-top">
             <tab v-model="index">
-                <tab-item v-for="(n,i) in tabItems" :key="i" :selected="i===3" @on-item-click="tabItem">
+                <tab-item v-for="(n,i) in tabItems" :key="i" :selected="i===2" @on-item-click="tabItem">
                     <div>
                         <span class="time">{{ n.time }}</span></br>
                         <span class="status-text">
@@ -13,6 +13,7 @@
                 </tab-item>
             </tab>
         </div>
+        <!-- endTime -->
         <div class="now-action" v-show="index == 2">
             <div class="action-endtime">
                 <img src="../../assets/images/img_bg_title@2x.png">
@@ -27,89 +28,118 @@
                 <span>保证金： 20元 (可退)</span>
             </div>
         </div>
-
-        <swiper v-model="index" :show-dots="false">
-            <swiper-item v-for="item in tabItems">
-                <div class="tab-swiper vux-center">
-                    <ul class="index-list" v-if="index == 0">
-                        <li>
-                            <div class="item-lt">
-                                <span>A55555</span>
-                            </div>
-                            <div class="item-rt">
-                                <x-button mini style="color:#fff;">￥200</x-button>
-                                <span>12-12 12:00</span>
-                                <img src="../../assets/images/icon_chengjiao@2x.png">
-                            </div>
-                        </li>
-                    </ul>
-                    <ul class="index-list" v-else-if="index == 1">
-                        <li>
-                            <div class="item-lt">
-                                <span>A55555</span>
-                            </div>
-                            <div class="item-rt">
-                                <x-button mini style="color:#fff;">￥200</x-button>
-                                <span>12-12 12:00</span>
-                                <img src="../../assets/images/icon_chengjiao@2x.png">
-                            </div>
-                        </li>
-                    </ul> 
-                    <ul class="index-list" v-else-if="index == 2">
-                        <li>
-                            <div class="item-lt">
-                                <span>A77777</span>
-                            </div>
-                            <div class="item-rt">
-                                <x-button mini type="warn" class="remind-btn" @click.native="goCompeteChat">去竞拍</x-button>
-                                <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-lt">
-                                <span>A55555</span>
-                            </div>
-                            <div class="item-rt">
-                                <x-button mini style="color:#fff;">￥200</x-button>
-                                <span>12-12 12:00</span>
-                                <img src="../../assets/images/icon_chengjiao@2x.png">
-                            </div>
-                        </li>
-                    </ul>
-                    <ul class="index-list" v-else-if="index == 3 || 4">
-                        <li >
-                            <div class="item-lt">
-                                <span>A33333</span>
-                            </div>
-                            <div class="item-rt">
-                                <span> <span class="focus">980</span> 人已关注</span>
-                                <x-button 
-                                    mini type="warn" 
-                                    class="remind-btn" 
-                                    data-auctionNumberId="1" 
-                                    data-categoryId="1"
-                                    @click.native="remindMe">
-                                        提醒我
-                            </x-button>
-                            </div>
-                        </li>
-                        <li>
-                            <div class="item-lt">
-                                <span>A66666</span>
-                            </div>
-                            <div class="item-rt">
-                                <span> <span class="focus">8000</span> 人已关注</span>
-                                <x-button mini class="subscribed-btn">已订阅</x-button>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </swiper-item>
-        </swiper>
+        <div class="tab-container">
+            <ul class="index-list">
+                <li v-if="index == 0" v-for="(item,i) in content">
+                    <div class="item-lt">
+                        <span>{{ item.name }}</span>
+                    </div>
+                    <div class="item-rt">
+                        <x-button mini style="color:#fff;">￥{{ item.amount | money }}</x-button>
+                        <span>{{ item.createDate | mdformate }}</span>
+                        <img v-if="item.status == 0" src="../../assets/images/icon_chengjiao@2x.png">
+                    </div>
+                </li> 
+                <li v-if="index == 1" v-for="(item,i) in content">
+                    <div class="item-lt">
+                        <span>{{ item.name }}</span>
+                    </div>
+                    <div class="item-rt">
+                        <x-button mini style="color:#fff;">￥{{ item.amount | money }}</x-button>
+                        <span>{{ item.createDate | mdformate }}</span>
+                        <img v-if="item.status == 0" src="../../assets/images/icon_chengjiao@2x.png">
+                    </div>
+                </li> 
+                <li v-if="index == 2" v-for="(item,i) in content">
+                    <div class="item-lt">
+                        <span>{{ item.name }}</span>
+                    </div>
+                    <div class="item-rt" v-if="item.status == 0">
+                        <x-button mini type="warn" class="remind-btn" @click.native="goCompeteChat">去竞拍</x-button>
+                        <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
+                    </div>
+                    <div class="item-rt" v-else>
+                        <x-button mini style="color:#fff;">￥{{ item.amount | money }}</x-button>
+                        <span>{{ item.createDate | mdformate }}</span>
+                        <img src="../../assets/images/icon_chengjiao@2x.png">
+                    </div>
+                </li> 
+                <li v-if="index == 3" v-for="(item,i) in content">
+                    <div class="item-lt">
+                        <span>{{ item.name }}</span>
+                    </div>
+                    <div class="item-rt">
+                        <span> <span class="focus">{{ item.subscribeCount }}</span> 人已关注</span>
+                        <x-button 
+                            v-if="item.remind ? false : true"
+                            mini type="warn" 
+                            class="remind-btn" 
+                            data-auctionNumberId="1" 
+                            data-categoryId="1"
+                            @click.native="remindMe">
+                                提醒我
+                        </x-button>
+                        <x-button mini class="subscribed-btn" v-else>已订阅</x-button>
+                    </div>
+                </li> 
+                <li v-if="index == 4" v-for="(item,i) in content">
+                    <div class="item-lt">
+                        <span>{{ item.name }}</span>
+                    </div>
+                    <div class="item-rt">
+                        <span> <span class="focus">{{ item.subscribeCount }}</span> 人已关注</span>
+                        <x-button 
+                            v-if="item.remind ? false : true"
+                            mini type="warn" 
+                            class="remind-btn" 
+                            data-auctionNumberId="1" 
+                            data-categoryId="1"
+                            @click.native="remindMe">
+                                提醒我
+                        </x-button>
+                        <x-button mini class="subscribed-btn" v-else>已订阅</x-button>
+                    </div>
+                </li> 
+                <!-- <li>
+                    <div class="item-lt">
+                        <span>A77777</span>
+                    </div>
+                    <div class="item-rt">
+                        <x-button mini type="warn" class="remind-btn" @click.native="goCompeteChat">去竞拍</x-button>
+                        <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
+                    </div>
+                </li>
+                <li>
+                    <div class="item-lt">
+                        <span>A66666</span>
+                    </div>
+                    <div class="item-rt">
+                        <span> <span class="focus">8000</span> 人已关注</span>
+                        <x-button mini class="subscribed-btn">已订阅</x-button>
+                    </div>
+                </li>
+                <li >
+                    <div class="item-lt">
+                        <span>A33333</span>
+                    </div>
+                    <div class="item-rt">
+                        <span> <span class="focus">980</span> 人已关注</span>
+                        <x-button 
+                            mini type="warn" 
+                            class="remind-btn" 
+                            data-auctionNumberId="1" 
+                            data-categoryId="1"
+                            @click.native="remindMe">
+                                提醒我
+                    </x-button>
+                    </div>
+                </li> -->
+            </ul>
+        </div>
         
         <!-- 验证码 model -->
         <div v-transfer-dom>
-            <popup v-model="showTelInfo" is-transparent :hide-on-blur=false class="custombottom">
+            <popup v-model="isLogin" is-transparent :hide-on-blur=false class="custombottom">
                 <div class="popup-container">
                     <div class="change-container">
                         <group>
@@ -117,7 +147,8 @@
                                 <x-input title="title" icon-type="clear" v-model="mobile" placeholder="请输入新手机号" style="padding-right:0;">
                                     <img slot="label" style="padding-right:10px;display:block;" src="../../assets/images/icon_cellphone@2x.png" width="16" height="18">
                                 </x-input>
-                                <x-button class="sendcode-btn" mini type="warn">发送验证码</x-button>
+                                <!-- <x-button class="sendcode-btn" mini type="warn" @click.native="getCode">发送验证码</x-button>
+                                <Button shape="circle" v-show="!show">{{count}}s后重新获取</Button> -->
                             </div>
                             <x-input title="title" v-model="authCode">
                                 <img slot="label" style="padding-right:10px;display:block;" src="../../assets/images/icon_mine_baozhengjin@2x.png" width="16" height="18">
@@ -172,7 +203,7 @@
 <script>
     import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, Checklist, TransferDomDirective as TransferDom } from 'vux'
     import nwFooter from '../../components/nwFooter'
-    import  { login, getAuctionNumber, getRemind } from '../../service/api'
+    import  { login, getAuctionNumber, getRemind, verifyCode, send } from '../../service/api'
     import { Storage } from '@/utils/utils'
     export default {
         name: 'index',
@@ -202,14 +233,18 @@
         },
         data() {
             return {
-                index: 2,
+                content: [],
+                index: 2,  // DOING
                 commonList: [
                     '我同意2019年限国际马拉松参赛号使用权 <span style="color:#F17F1A;text-decoration: underline;">购买协议</span>', 
                     '为确保您顺利参赛，您授权提供以上身份证明信息'
                 ],
+                isLogin: true,
+                show: true,
+                count: '',
+                timer: null,
                 checklist001: [],
                 payModel: false,
-                showTelInfo: true,
                 authCode: '',
                 mobile:'',
                 tabItems: [{
@@ -231,33 +266,100 @@
             }
         },
         created() {
-            
+            let LoginStatus = Storage.get('isLogin').data;
+            if(!LoginStatus){
+                this.isLogin = false
+                this.getAuctions('DOING');
+            }
         },
         methods: {
             logIn() {
-                let params = { mobile:this.mobile,code:this.authCode };
-                login(params).then(res => {
-                    if(res.code == 200) {
-                        this.showTelInfo = false;
-                        Storage.set('refreshToken', res.data.refreshToken);
-                        Storage.set('token', res.data.token)
-                        this.getAuctions()
-                    } else {
-                        this.showTelInfo = true;
-                    }
-                })
+                if (this.mobile !=='' || this.authCode !== '') {
+                    let params = { mobile:this.mobile,code:this.authCode };
+                    login(params).then(res => {
+                        if(res.code == 200) {
+                            this.isLogin = false;
+                            Storage.set('refreshToken', res.data.refreshToken);
+                            Storage.set('token', res.data.token)
+                            Storage.set('isLogin', false)
+                            setTimeout(()=>{
+                                this.getAuctions('DOING');
+                            },200)
+                            
+                        } else {
+                            this.isLogin = true;
+                        }
+                    })
+                } else {
+                    alert('手机号和验证码不能为空')
+                }
+                
             },
+            // getCode() {
+            //     let mobile = this.mobile;
+            //     send({ mobile: mobile}).then(res => {
+            //         if(res.code == 200) {
+            //             const TIME_COUNT = 60;
+            //             if (!this.timer) {
+            //                 this.count = TIME_COUNT;
+            //                 this.show = false;
+            //                 this.timer = setInterval(() => {
+            //                     if (this.count > 0 && this.count <= TIME_COUNT) {
+            //                         this.count--;
+            //                     } else {
+            //                         this.show = true;
+            //                         clearInterval(this.timer);
+            //                         this.timer = null;
+            //                     }
+            //                 }, 1000)
+            //             }
+            //         } else {
+            //             console.log(res)
+            //         }
+            //     })
+            // },
+            // checkCode() { // 验证码校验
+            //     let params = {
+            //         mobile: this.mobile,
+            //         code: this.authCode,
+            //     }
+            //     verifyCode(params).then(res => {
+            //         if(res.code == 200) {
+            //             this.validateCode = true
+            //             Storage.set('isLogin',true);
+            //         }
+            //     })
+            // },
             tabItem(i) {
-                console.log(i)
+                this.index = i;
+                switch(i) {
+                    case 0:
+                        this.getAuctions('LAST_DONE');
+                        break; 
+                    case 1:
+                        this.getAuctions('DONE');
+                        break;
+                    case 2:
+                        this.getAuctions('DOING');
+                        break;  
+                    case 3:
+                        this.getAuctions('DO');
+                        break;
+                    case 4:
+                        this.getAuctions('LAST_DO');
+                        break;
+                }
             },
-            getAuctions() {
+            getAuctions(status) {
                 let params = {
-                    status: 'LAST_DONE',
+                    matchId: '1001',
+                    status: status,
                     pageNum: 1,
                     pageSize: 100
                 };
                 getAuctionNumber(params).then(res => {
-                    if(res.code !== 401) {
+                    if(res.code == 200) {
+                        this.content = res.data.content;
                     }
                 })
             },
@@ -269,7 +371,6 @@
                 this.payModel = true;
             },
             remindMe(e) { // 提醒我
-                console.log(e)
                 let auctionNumberId = e.target.dataset.auctionNumberId;
                 let categoryId = e.target.dataset.categoryId;
                 getRemind({auctionNumberId, categoryId}).then(res => {
@@ -327,7 +428,7 @@
             }
         }
         .vux-slider {
-            overflow-y: visible;
+            overflow-y: visible!important;
             .vux-swiper {
                 overflow-y: visible;
                 .index-list {
@@ -389,6 +490,66 @@
                 }
             }
             
+        }
+
+        .tab-container {
+            padding: 17px;
+            .index-list {
+                    margin-bottom: 50px;
+                    li {
+                        display: flex;
+                        align-items: center;
+                        width: 100%;
+                        height: 1.6rem;
+                        margin-top: 9px;
+                        background: url('../../assets/images/img_bg_1.png') no-repeat center;
+                        background-size: cover;
+                        .item-lt {
+                            width: 30%;
+                            margin-left: 0.4rem;
+                            color: #192137;
+                            font-size: 0.45rem;
+                            font-weight: bold;
+                        }
+                        .item-rt {
+                            width: 70%;
+                            display: flex;
+                            justify-content: space-around;
+                            padding: 0 0.1rem;
+                            align-items: center;
+                            img {
+                                width: 1.2rem;
+                                height: 1.2rem;
+                            }
+                            span {
+                                color: #CBCED5;
+                            }
+                            .weui-btn {
+                                margin: 0;
+                                font-size: 0.3rem;
+                                
+                                height: 28px;
+                                line-height: 28px;
+                                border-radius: 16px;
+                            }
+                            .subscribed-btn {
+                                color: #fff;
+                                background-color: #D8DBE0;
+                            }
+
+                            .focus {
+                                color: #fff;
+                                color: #F0A800;
+                                font-size: 18px;
+                                font-weight: 500;
+                            }
+                            .buy-btn {
+                                color: #F0A800;
+                                border: 1px solid #F0A800;
+                            }
+                        }
+                    }
+                }
         }
         
         .now-action {
@@ -456,15 +617,15 @@
     }
 
     .weui-cells .weui-cell {
-        padding: 5px 0;
+        padding: 10px 0;
     }
 
-    .weui-cells:before,
+    /* .weui-cells:before,
     .weui-cells:after,
     .weui-cell:before,
     .weui-cell:after{
         border: none!important;
-    }
+    } */
 
     .weui-cells_checkbox .weui-check:checked + .weui-icon-checked:before{
         color: #575D6F!important;
