@@ -198,10 +198,12 @@
             </popup>
         </div>
         <nw-footer isSelected1></nw-footer>
+        <!-- loading -->
+        <loading :show="showLoading" text="loading..."></loading>
     </div>
 </template>  
 <script>
-    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, Checklist, TransferDomDirective as TransferDom } from 'vux'
+    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, Checklist, Loading, TransferDomDirective as TransferDom } from 'vux'
     import nwFooter from '../../components/nwFooter'
     import  { login, getAuctionNumber, getRemind, verifyCode, send } from '../../service/api'
     import { Storage } from '@/utils/utils'
@@ -229,10 +231,12 @@
             Group, 
             Popup, 
             XInput,
-            Checklist
+            Checklist,
+            Loading
         },
         data() {
             return {
+                showLoading: true,
                 content: [],
                 index: 2,  // DOING
                 commonList: [
@@ -268,8 +272,9 @@
         created() {
             let LoginStatus = Storage.get('isLogin').data;
             if(!LoginStatus){
-                this.isLogin = false
+                this.isLogin = false;
                 this.getAuctions('DOING');
+                this.showLoading = false;
             }
         },
         methods: {
@@ -331,6 +336,7 @@
             //     })
             // },
             tabItem(i) {
+                this.showLoading = true;
                 this.index = i;
                 switch(i) {
                     case 0:
@@ -360,6 +366,7 @@
                 getAuctionNumber(params).then(res => {
                     if(res.code == 200) {
                         this.content = res.data.content;
+                        this.showLoading = false;
                     }
                 })
             },
@@ -367,15 +374,14 @@
                 this.$router.push({ path: '/competeChat', query: { id: 'A66666' }})
             },
             goBuy(e) {
-                console.log(e.currentTarget.dataset.id)
                 this.payModel = true;
             },
             remindMe(e) { // 提醒我
                 let auctionNumberId = e.target.dataset.auctionNumberId;
                 let categoryId = e.target.dataset.categoryId;
-                getRemind({auctionNumberId, categoryId}).then(res => {
+                getRemind({auctionNumberId: auctionNumberId, categoryId: categoryId}).then(res => {
                     if(res.code == 200) {
-
+                        alert('')
                     }
                 })
             }

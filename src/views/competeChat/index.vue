@@ -118,8 +118,8 @@
       }
     },
     created() {
+      this.loginRome()
       getAuctionInfo({auctionNumberId: '1'}).then(res => {
-        
         if(res.code == 200) {
           this.addAmount = res.data.addAmount;
           this.amount = res.data.amount;
@@ -137,7 +137,7 @@
           this.signature = res.data.signature;
           this.timestamp = res.data.timestamp;
           this.flag =  res.data.flag;
-          this.init()  // 初始化
+          
         }
       })
       getImInfo().then(res => { // 获取当前登录用户的极光im账号
@@ -153,6 +153,7 @@
     mounted() {
       //  获取历史记录
         this.getConversation();
+        
     },
     destroyed() {
 
@@ -220,7 +221,7 @@
         JIM.init(opts).onSuccess(function(data) {
           console.log(data.message)
           if(data.message == "success") { // 登录房间
-            that.loginRome()
+            
           }
           }).onFail(function(data) {
             console.log(data.message)
