@@ -1,24 +1,24 @@
 <template>
   <div class="compete-chat flex-box">
       <!-- 顶部竞拍信息 -->
-      <div class="compete-chat-top">
-        <div class="now">
-          <div>正在进行: <span class="end-time">预计 {{createDate}} 结束</span></div>
-          <router-link to="./">购买协议</router-link>
-        </div>
-        <p class="">
-          {{matchName}} <span class="compete-number">{{ name }}</span> 的使用权
-        </p>
-        <div class="current-content">
-          <div>
-            <span class="current-price">{{ currentAmount }}</span> 当前价 (元)
-          </div>
-          <div>
-            <p>围观：{{numberExtend.viewCount}}次</p>
-            <p>出价：{{numberExtend.auctionCount}}人</p>
-          </div>
-        </div>
-      </div>
+      <!--<div class="compete-chat-top">-->
+        <!--<div class="now">-->
+          <!--<div>正在进行: <span class="end-time">预计 {{createDate}} 结束</span></div>-->
+          <!--<router-link to="./">购买协议</router-link>-->
+        <!--</div>-->
+        <!--<p class="">-->
+          <!--{{matchName}} <span class="compete-number">{{ name }}</span> 的使用权-->
+        <!--</p>-->
+        <!--<div class="current-content">-->
+          <!--<div>-->
+            <!--<span class="current-price">{{ currentAmount }}</span> 当前价 (元)-->
+          <!--</div>-->
+          <!--<div>-->
+            <!--<p>围观：{{numberExtend.viewCount}}次</p>-->
+            <!--<p>出价：{{numberExtend.auctionCount}}人</p>-->
+          <!--</div>-->
+        <!--</div>-->
+      <!--</div>-->
       <!-- 聊天室 -->
       <view-box ref="chatRome" style="width:100%;" @scrollTo="scrollTo">
         <div class="variable">
@@ -76,7 +76,7 @@
   </div>
 </template>
 <script>
-  import { ViewBox, XInput, XButton, Toast } from 'vux' 
+  import { ViewBox, XInput, XButton, Toast } from 'vux';
   import { sign, getChatRoom, getImInfo, getAuctionInfo } from '@/service/api'
   import { formatTime } from '../../utils/utils'
   /* eslint-disable */
@@ -118,26 +118,26 @@
       }
     },
     created() {
-      this.loginRome()
-      getAuctionInfo({auctionNumberId: '1'}).then(res => {
-        if(res.code == 200) {
-          this.addAmount = res.data.addAmount;
-          this.amount = res.data.amount;
-          this.name = res.data.name;
-          this.status = res.data.status;
-          this.numberExtend = res.data.numberExtend;
-          this.matchName = res.data.numberInfo.matchName
-          this.createDate = res.data.createDate;
-        }
-      })
-
+      //this.loginRome()
+      // getAuctionInfo({auctionNumberId: '1'}).then(res => {
+      //   if(res.code == 200) {
+      //     this.addAmount = res.data.addAmount;
+      //     this.amount = res.data.amount;
+      //     this.name = res.data.name;
+      //     this.status = res.data.status;
+      //     this.numberExtend = res.data.numberExtend;
+      //     this.matchName = res.data.numberInfo.matchName
+      //     this.createDate = res.data.createDate;
+      //   }
+      // })
       sign().then(res => {
+        console.log(0)
         if(res.code == 200) {
           this.randomStr = res.data.random_str;
           this.signature = res.data.signature;
           this.timestamp = res.data.timestamp;
           this.flag =  res.data.flag;
-          
+          this.init()
         }
       })
       getImInfo().then(res => { // 获取当前登录用户的极光im账号
@@ -152,8 +152,8 @@
     },
     mounted() {
       //  获取历史记录
-        this.getConversation();
-        
+        //this.getConversation();
+
     },
     destroyed() {
 
@@ -218,10 +218,11 @@
           "timestamp" : this.timestamp,
           "flag" : 0
         }
+        console.log(opts)
         JIM.init(opts).onSuccess(function(data) {
           console.log(data.message)
           if(data.message == "success") { // 登录房间
-            
+            that.loginRome()
           }
           }).onFail(function(data) {
             console.log(data.message)
