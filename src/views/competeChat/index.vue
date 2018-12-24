@@ -1,24 +1,24 @@
 <template>
   <div class="compete-chat flex-box">
       <!-- 顶部竞拍信息 -->
-      <!--<div class="compete-chat-top">-->
-        <!--<div class="now">-->
-          <!--<div>正在进行: <span class="end-time">预计 {{createDate}} 结束</span></div>-->
-          <!--<router-link to="./">购买协议</router-link>-->
-        <!--</div>-->
-        <!--<p class="">-->
-          <!--{{matchName}} <span class="compete-number">{{ name }}</span> 的使用权-->
-        <!--</p>-->
-        <!--<div class="current-content">-->
-          <!--<div>-->
-            <!--<span class="current-price">{{ currentAmount }}</span> 当前价 (元)-->
-          <!--</div>-->
-          <!--<div>-->
-            <!--<p>围观：{{numberExtend.viewCount}}次</p>-->
-            <!--<p>出价：{{numberExtend.auctionCount}}人</p>-->
-          <!--</div>-->
-        <!--</div>-->
-      <!--</div>-->
+      <div class="compete-chat-top">
+        <div class="now">
+          <div>正在进行: <span class="end-time">预计 {{createDate}} 结束</span></div>
+          <router-link to="./">购买协议</router-link>
+        </div>
+        <p class="">
+          {{matchName}} <span class="compete-number">{{ name }}</span> 的使用权
+        </p>
+        <div class="current-content">
+          <div>
+            <span class="current-price">{{ currentAmount }}</span> 当前价 (元)
+          </div>
+          <div>
+            <p>围观：{{ totalMember }}次</p>
+            <p>出价：0人</p>
+          </div>
+        </div>
+      </div>
       <!-- 聊天室 -->
       <view-box ref="chatRome" style="width:100%;" @scrollTo="scrollTo">
         <div class="variable">
@@ -27,7 +27,7 @@
             <div class="me" v-if="username == n.othername">
               <div class="chat-box">
                 <p>
-                  <span class="chat-time"> {{ n.otherctime }}</span>
+                  <span class="chat-time"> {{ n.otherctime | formatDate }}</span>
                   <span class="nickname">{{ username }}</span>
                 </p>
                 <span class="chat-content">
@@ -47,7 +47,7 @@
               <div class="chat-box">
                 <p>
                   <span class="nickname">{{ n.othername }}</span>
-                  <span class="chat-time"> {{ n.otherctime }}</span>
+                  <span class="chat-time"> {{ n.otherctime | formatDate }}</span>
                 </p>
                 <span class="chat-content">
                   {{ n.othercontent }}
@@ -110,14 +110,15 @@
         roomId: '12909551',
         password: '',
         username: '',
-        chatLists: [],  // 消息列表
+        chatLists: [],     // 消息列表
         currentPrice: '10.00',
         commentVal: '',
         commentsList: [],
-        offer: 0.00 // 出价
+        offer: 0.00,       // 出价
+        totalMember: 0     // 当前聊天室总人数
       }
     },
-    created() {
+    mounted() {
       //this.loginRome()
       // getAuctionInfo({auctionNumberId: '1'}).then(res => {
       //   if(res.code == 200) {
@@ -150,13 +151,7 @@
         
       })
     },
-    mounted() {
-      //  获取历史记录
-        //this.getConversation();
-
-    },
     destroyed() {
-
       this.exitRoom()
     },
     methods: {
@@ -233,8 +228,16 @@
         JIM.getChatroomInfo({
             'id': this.roomId
         }).onSuccess(function (data, msg) {
-            console.log('success: ' + JSON.stringify(data));
-            console.log('msg: ' + JSON.stringify(msg))
+            //data.code 返回码
+            //data.message 描述
+            //data.info.id 聊天室 id
+            //data.info.name 聊天室名字
+            //data.info.description 聊天室描述
+            //data.info.appkey 聊天室所属 appkey 
+            //data.info.total_member_count 当前聊天室人数
+            //data.info.max_member_count 聊天室最大容量
+            that.totalMember = data.info.total_member_count
+            console.log(that.totalMember)
             that.enterRoom()
         }).onFail(function (data) {
             console.log('error: ' + JSON.stringify(data));
