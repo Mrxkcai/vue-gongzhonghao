@@ -60,7 +60,7 @@
         },
         data() {
             return {
-                ishasData: false,
+                ishasData: true,
                 amount: '0.00',  // 保证金
                 statusCode: '',  // 状态 0 可提现 1 冻结中 2 已提现
                 marginList: []   // 保证金列表
@@ -84,6 +84,9 @@
             marginLog(params) {
                 getMarginLog(params).then(res => {
                     this.marginList = res.data.content
+                    if(res.data.content.length) {
+                        this.ishasData = false;
+                    }
                 })
             }
         }

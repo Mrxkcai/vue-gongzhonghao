@@ -276,7 +276,7 @@
         created() {
             let LoginStatus = Storage.get('isLogin').data;
             if(!LoginStatus){
-                this.isLogin = false;
+                this.isLogin = true;
                 this.getAuctions('DOING');
                 this.showLoading = false;
             }
