@@ -55,7 +55,7 @@
                         <span>{{ item.name }}</span>
                     </div>
                     <div class="item-rt" v-if="item.status == 0">
-                        <x-button mini type="warn" class="remind-btn" @click.native="goCompeteChat">去竞拍</x-button>
+                        <x-button mini type="warn" class="remind-btn" :data-id="item.id" @click.native="goCompeteChat">去竞拍</x-button>
                         <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
                     </div>
                     <div class="item-rt" v-else>
@@ -74,8 +74,8 @@
                             v-if="item.remind ? false : true"
                             mini type="warn" 
                             class="remind-btn" 
-                            data-auctionNumberId="1" 
-                            data-categoryId="1"
+                            :data-auctionNumberId="item.id" 
+                            :data-categoryId="item.categoryId"
                             @click.native="remindMe">
                                 提醒我
                         </x-button>
@@ -92,8 +92,8 @@
                             v-if="item.remind ? false : true"
                             mini type="warn" 
                             class="remind-btn" 
-                            data-auctionNumberId="1" 
-                            data-categoryId="1"
+                            :data-auctionNumberId="item.id" 
+                            :data-categoryId="item.categoryId"
                             @click.native="remindMe">
                                 提醒我
                         </x-button>
@@ -200,10 +200,12 @@
         <nw-footer isSelected1></nw-footer>
         <!-- loading -->
         <loading :show="showLoading" text="loading..."></loading>
+        <!-- toast -->
+        <toast v-model="showToast" position="top" type="text" :time=1500 text="订阅成功"></toast>
     </div>
 </template>  
 <script>
-    import { Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, Checklist, Loading, TransferDomDirective as TransferDom } from 'vux'
+    import { Toast, Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, Checklist, Loading, TransferDomDirective as TransferDom } from 'vux'
     import nwFooter from '../../components/nwFooter'
     import  { login, getAuctionNumber, getRemind, verifyCode, send } from '../../service/api'
     import { Storage } from '@/utils/utils'
@@ -213,6 +215,7 @@
             TransferDom
         },
         components: {
+            Toast,
             Tab, 
             TabItem, 
             Sticky, 
@@ -236,6 +239,7 @@
         },
         data() {
             return {
+                showToast: false,
                 showLoading: true,
                 content: [],
                 index: 2,  // DOING
@@ -370,18 +374,23 @@
                     }
                 })
             },
-            goCompeteChat() {
-                this.$router.push({ path: '/competeChat', query: { id: 'A66666' }})
+            goCompeteChat(e) {
+                let id = e.target.dataset.id;
+                this.$router.push({ path: '/competeChat', query: { id: id }})
             },
             goBuy(e) {
                 this.payModel = true;
             },
             remindMe(e) { // 提醒我
-                let auctionNumberId = e.target.dataset.auctionNumberId;
-                let categoryId = e.target.dataset.categoryId;
-                getRemind({auctionNumberId: auctionNumberId, categoryId: categoryId}).then(res => {
+                let id = e.target.dataset.auctionnumberid;
+                getRemind({auctionNumberId: e.target.dataset.auctionnumberid, categoryId: e.target.dataset.categoryid}).then(res => {
                     if(res.code == 200) {
-                        alert('')
+                        this.content.forEach((item, index) => {
+                            if(item.id == id) {
+                                item.remind = true;
+                                this.showToast = true;
+                            }
+                        })
                     }
                 })
             }
