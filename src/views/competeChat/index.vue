@@ -72,12 +72,12 @@
           </div>
         </div>
       </div>
-      <toast v-model="showToast" position="top" type="text" :time=1500 text="进入房间"></toast>
+      <toast v-model="showToast" position="top" type="text" :time=1500 :text="toastMsg"></toast>
   </div>
 </template>
 <script>
   import { ViewBox, XInput, XButton, Toast } from 'vux';
-  import { sign, getChatRoom, getImInfo, getAuctionInfo } from '@/service/api'
+  import { sign, getChatRoom, getImInfo, getAuctionInfo, getOffer } from '@/service/api'
   import { formatTime, Storage } from '../../utils/utils'
   /* eslint-disable */
   
@@ -93,6 +93,8 @@
     },
     data() {
       return {
+        me:{},
+        toastMsg: '进入房间',            // toast提示
         createDate: '',
         matchName: '',      // 赛事名称 
         currentAmount: '0', // 当前价格
@@ -119,7 +121,6 @@
       }
     },
     created() {
-      document.getElementById('app').scrollTop=1000000;
       // this.$router.beforeEach((to, from, next) => {
       //     if(to.name === index) {
       //       this.exitRoom()
@@ -132,7 +133,7 @@
     },
     mounted() {
       //this.loginRome()
-      getAuctionInfo({auctionNumberId: '1'}).then(res => {
+      getAuctionInfo({auctionNumberId: this.$route.query.id}).then(res => {
         if(res.code == 200) {
           this.addAmount = res.data.addAmount;
           this.amount = res.data.amount;
@@ -182,8 +183,20 @@
     },
     methods: {
       nowOffer() { // 立即出价
-        let content = `出价：${this.offer}`;
-        console.log(content)
+        let othercontent = `出价：${this.offer}`;
+        let otherctime = new Date();
+        let othername = this.username;
+        let otherItem = { othername, otherctime, othercontent };
+
+        getOffer({auctionNumberId: this.$route.query.id,amount:this.offer}).then(res => {
+          console.log(res)
+          if(res.code == 200) {
+            this.chatLists.push(otherItem)
+          } else {
+            this.toastMsg = res.message;
+            this.showToast = true;
+          }
+        })
       },
       addPrice() { // 加价
         this.offer = (this.offer*1+this.addAmount).toFixed(2);
@@ -269,6 +282,7 @@
         });
       },
       enterRoom() { // 进入房间
+        let that = this;
         JIM.enterChatroom({'id': this.roomId}).onSuccess(function (data) {
             console.log('加入聊天室 success: ' + JSON.stringify(data));
             this.getConversation()

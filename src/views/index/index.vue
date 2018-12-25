@@ -55,7 +55,7 @@
                         <span>{{ item.name }}</span>
                     </div>
                     <div class="item-rt" v-if="item.status == 0">
-                        <x-button mini type="warn" class="remind-btn" :data-id="item.name" @click.native="goCompeteChat">去竞拍</x-button>
+                        <x-button mini type="warn" class="remind-btn" :data-id="item.id" @click.native="goCompeteChat">去竞拍</x-button>
                         <x-button mini type="warn" :data-index="i" plain class="buy-btn" @click.native="goBuy">直接购买 ￥{{ item.amount | money }}</x-button>
                     </div>
                     <div class="item-rt" v-else>
