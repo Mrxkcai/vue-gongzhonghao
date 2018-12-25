@@ -276,7 +276,7 @@
         created() {
             let LoginStatus = Storage.get('isLogin').data;
             if(!LoginStatus){
-                this.isLogin = false;
+                this.isLogin = true;
                 this.getAuctions('DOING');
                 this.showLoading = false;
             }
@@ -287,7 +287,7 @@
                     let params = { mobile:this.mobile,code:this.authCode };
                     login(params).then(res => {
                         if(res.code == 200) {
-                            this.isLogin = false;
+                            this.isLogin = true;
                             Storage.set('refreshToken', res.data.refreshToken);
                             Storage.set('token', res.data.token)
                             Storage.set('isLogin', false)
