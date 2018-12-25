@@ -248,6 +248,7 @@
 					this.status = "FINISH"
 				};
 
+
 				//查询数据
 				this.init();
 			},
