@@ -230,6 +230,8 @@
 		methods: {
 			getItem(index) {
 				// console.log(index)
+				this.getData = null;
+				this.getDataInfo = null;
 				if (index == 0) {
 					this.tab1 = true
 					this.tab2 = false
@@ -251,6 +253,7 @@
 				this.init();
 			},
 			getIndex(index) {
+				this.getDataInfo = null;
 				this.getDataInfo = this.getData[index]
 				console.log(this.getDataInfo)
 				this.$router.push({
