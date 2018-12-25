@@ -255,7 +255,7 @@
 				this.getDataInfo = this.getData[index]
 				console.log(this.getDataInfo)
 				this.$router.push({
-					path:`/competeChat?id=${this.getDataInfo.number}`
+					path:`/competeChat?id=${this.getDataInfo.numberInfo.numberId}`
 				})
 			},
 			log(str) {
