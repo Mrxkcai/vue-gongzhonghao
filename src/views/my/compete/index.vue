@@ -178,7 +178,7 @@
 	import { auctionList } from '../../../service/api'
 	import { getUserInfo } from '../../../service/api'
 	import axios from 'axios'
-	import getData from './data.json'
+	import getDataLocal from './data.json'
 
 	export default {
 		directives: {
@@ -253,6 +253,9 @@
 			getIndex(index) {
 				this.getDataInfo = this.getData[index]
 				console.log(this.getDataInfo)
+				this.$router.push({
+					path:`/competeChat?id=${this.getDataInfo.number}`
+				})
 			},
 			log(str) {
 				// console.log(str)
@@ -312,7 +315,7 @@
 						}
 
 						//本地演示数据
-						// that.getData = getData.data;
+						// that.getData = getDataLocal.data;
 						// console.log(that.getData)
 
 					}else{

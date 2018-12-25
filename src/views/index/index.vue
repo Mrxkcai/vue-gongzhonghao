@@ -260,8 +260,6 @@
                             this.isLogin = false;
                             Storage.set('isLogin', false)
                             this.getAuctions('DOING')
-                            this.$router.go(0)
-                            
                         } else {
                             this.isLogin = true;
                         }
