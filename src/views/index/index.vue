@@ -55,8 +55,8 @@
                         <span>{{ item.name }}</span>
                     </div>
                     <div class="item-rt" v-if="item.status == 0">
-                        <x-button mini type="warn" class="remind-btn" :data-id="item.id" @click.native="goCompeteChat">去竞拍</x-button>
-                        <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
+                        <x-button mini type="warn" class="remind-btn" :data-id="item.name" @click.native="goCompeteChat">去竞拍</x-button>
+                        <x-button mini type="warn" :data-index="i" plain class="buy-btn" @click.native="goBuy">直接购买 ￥{{ item.amount | money }}</x-button>
                     </div>
                     <div class="item-rt" v-else>
                         <x-button mini style="color:#fff;">￥{{ item.amount | money }}</x-button>
@@ -99,44 +99,10 @@
                         </x-button>
                         <x-button mini class="subscribed-btn" v-else>已订阅</x-button>
                     </div>
-                </li> 
-                <!-- <li>
-                    <div class="item-lt">
-                        <span>A77777</span>
-                    </div>
-                    <div class="item-rt">
-                        <x-button mini type="warn" class="remind-btn" @click.native="goCompeteChat">去竞拍</x-button>
-                        <x-button mini type="warn" data-id="123" plain class="buy-btn" @click.native="goBuy">直接购买 ￥30000</x-button>
-                    </div>
                 </li>
-                <li>
-                    <div class="item-lt">
-                        <span>A66666</span>
-                    </div>
-                    <div class="item-rt">
-                        <span> <span class="focus">8000</span> 人已关注</span>
-                        <x-button mini class="subscribed-btn">已订阅</x-button>
-                    </div>
-                </li>
-                <li >
-                    <div class="item-lt">
-                        <span>A33333</span>
-                    </div>
-                    <div class="item-rt">
-                        <span> <span class="focus">980</span> 人已关注</span>
-                        <x-button 
-                            mini type="warn" 
-                            class="remind-btn" 
-                            data-auctionNumberId="1" 
-                            data-categoryId="1"
-                            @click.native="remindMe">
-                                提醒我
-                    </x-button>
-                    </div>
-                </li> -->
             </ul>
         </div>
-        
+    
         <!-- 验证码 model -->
         <div v-transfer-dom>
             <popup v-model="isLogin" is-transparent :hide-on-blur=false class="custombottom">
@@ -167,7 +133,7 @@
                     <div class="variable">
                         <div class="pay-model-header">
                             2019年西安国际马拉松 
-                            <span class="auctionnumber">A88888</span>  
+                            <span class="auctionnumber">{{modelData.name}}</span>  
                             的使用权
                         </div>
                         <div class="pay-model-content">
@@ -188,7 +154,7 @@
                     <div class="pay-model-footer bottom">
                         <div>
                             <span>直接购买：</span>
-                            <span class="price">￥3000.00</span>
+                            <span class="price">{{modelData.price | money}}</span>
                         </div>
                         <div>
                             <x-button type="warn" style="width:4rem;height:1.2rem;border-radius: 0.75rem;">确认购买</x-button>
@@ -199,7 +165,7 @@
         </div>
         <nw-footer isSelected1></nw-footer>
         <!-- loading -->
-        <loading :show="showLoading" text="loading..."></loading>
+        <loading :show="showLoading" text="加载中..."></loading>
         <!-- toast -->
         <toast v-model="showToast" position="top" type="text" :time=1500 text="订阅成功"></toast>
     </div>
@@ -240,14 +206,14 @@
         data() {
             return {
                 showToast: false,
-                showLoading: true,
+                showLoading: false,
                 content: [],
                 index: 2,  // DOING
                 commonList: [
                     '我同意2019年限国际马拉松参赛号使用权 <span style="color:#F17F1A;text-decoration: underline;">购买协议</span>', 
                     '为确保您顺利参赛，您授权提供以上身份证明信息'
                 ],
-                isLogin: true,
+                isLogin: false,
                 show: true,
                 count: '',
                 timer: null,
@@ -270,15 +236,17 @@
                 },{
                     time: '12-12 13:00',
                     status: '即将开始'
-                }]
+                }],
+                modelData: {}
             }
         },
         created() {
             let LoginStatus = Storage.get('isLogin').data;
-            if(!LoginStatus){
-                this.isLogin = true;
+            if(LoginStatus == false){
+                this.isLogin = false;
                 this.getAuctions('DOING');
-                this.showLoading = false;
+            } else if(LoginStatus === undefined){
+                this.isLogin = true;
             }
         },
         methods: {
@@ -287,13 +255,12 @@
                     let params = { mobile:this.mobile,code:this.authCode };
                     login(params).then(res => {
                         if(res.code == 200) {
-                            this.isLogin = false;
                             Storage.set('refreshToken', res.data.refreshToken);
                             Storage.set('token', res.data.token)
+                            this.isLogin = false;
                             Storage.set('isLogin', false)
-                            setTimeout(()=>{
-                                this.getAuctions('DOING');
-                            },200)
+                            this.getAuctions('DOING')
+                            this.$router.go(0)
                             
                         } else {
                             this.isLogin = true;
@@ -361,7 +328,7 @@
                 }
             },
             getAuctions(status) {
-                let matchId = this.$route.params.matchId;
+                let matchId = this.$route.query.matchId;
                 let params = {
                     matchId: '1001',
                     status: status,
@@ -380,7 +347,10 @@
                 this.$router.push({ path: '/competeChat', query: { id: id }})
             },
             goBuy(e) {
+                let i = e.target.dataset.index
                 this.payModel = true;
+                this.modelData.name = this.content[i].name;
+                this.modelData.price = this.content[i].amount;
             },
             remindMe(e) { // 提醒我
                 let id = e.target.dataset.auctionnumberid;

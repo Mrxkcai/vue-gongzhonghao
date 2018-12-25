@@ -78,7 +78,7 @@
 <script>
   import { ViewBox, XInput, XButton, Toast } from 'vux';
   import { sign, getChatRoom, getImInfo, getAuctionInfo } from '@/service/api'
-  import { formatTime } from '../../utils/utils'
+  import { formatTime, Storage } from '../../utils/utils'
   /* eslint-disable */
   
   let JIM = new JMessage();
@@ -120,20 +120,25 @@
     },
     mounted() {
       //this.loginRome()
-      // getAuctionInfo({auctionNumberId: '1'}).then(res => {
-      //   if(res.code == 200) {
-      //     this.addAmount = res.data.addAmount;
-      //     this.amount = res.data.amount;
-      //     this.name = res.data.name;
-      //     this.status = res.data.status;
-      //     this.numberExtend = res.data.numberExtend;
-      //     this.matchName = res.data.numberInfo.matchName
-      //     this.createDate = res.data.createDate;
-      //   }
-      // })
-      sign().then(res => {
-        console.log(0)
+      getAuctionInfo({auctionNumberId: '1'}).then(res => {
         if(res.code == 200) {
+          this.addAmount = res.data.addAmount;
+          this.amount = res.data.amount;
+          this.name = res.data.name;
+          this.status = res.data.status;
+          this.numberExtend = res.data.numberExtend;
+          this.matchName = res.data.numberInfo.matchName
+          this.createDate = res.data.createDate;
+        }
+      })
+      sign().then(res => {
+        if(res.code == 200) {
+          // debugger;
+          
+          // console.log('Token=='+Storage.get('token'))
+          // console.log('Token1=='+Storage.get('refreshToken'))
+          // let aaa = Storage.get('token')
+          // debugger;
           this.randomStr = res.data.random_str;
           this.signature = res.data.signature;
           this.timestamp = res.data.timestamp;
@@ -151,8 +156,14 @@
         
       })
     },
+    // updated:function(){
+    //   this.$nextTick(function(){
+    //   let div = document.getElementById('dialogue_box');
+    //     div.scrollTop = div.scrollHeight;
+    //   })
+    // },
     destroyed() {
-      this.exitRoom()
+      //this.exitRoom()
     },
     methods: {
       nowOffer() { // 立即出价
@@ -175,9 +186,7 @@
         JIM.login({
             'username': that.username,
             'password': that.password
-        }).onSuccess(function (data) {
-            console.log('login  onSuccess :' + JSON.stringify(data));
-            
+        }).onSuccess(function (data) { 
             that.getRoomInfo()
             // 聊天室消息监听,监听到进入聊天室之前的所有消息（该事件会被多次调用，每条消息调用一次）
             JIM.onRoomMsg(function (data) {
@@ -213,7 +222,6 @@
           "timestamp" : this.timestamp,
           "flag" : 0
         }
-        console.log(opts)
         JIM.init(opts).onSuccess(function(data) {
           console.log(data.message)
           if(data.message == "success") { // 登录房间
