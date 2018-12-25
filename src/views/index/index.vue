@@ -361,6 +361,7 @@
                 }
             },
             getAuctions(status) {
+                let matchId = this.$route.params.matchId;
                 let params = {
                     matchId: '1001',
                     status: status,
