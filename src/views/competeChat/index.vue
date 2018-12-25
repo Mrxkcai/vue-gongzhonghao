@@ -20,7 +20,7 @@
         </div>
       </div>
       <!-- 聊天室 -->
-      <view-box ref="chatRome" style="width:100%;" @scrollTo="scrollTo">
+      <view-box ref="chatRome" id="box" style="width:100%;">
         <div class="variable">
           <div class="compete-chat-content" v-for="n in chatLists">
             <!-- 自己 -->
@@ -64,7 +64,7 @@
         </div>
         <div class="offer">
           <div style="width: 60%;">
-            <x-input placeholder="每次最低加价20元" :show-clear="false" type="text" v-model="offer" style="font-size:15px;"></x-input>
+            <x-input placeholder="每次最低加价20元" :show-clear="false" type="number" v-model="offer" style="font-size:15px;"></x-input>
             <span class="plus-icon" @click="addPrice">+</span>
           </div>
           <div>
@@ -118,6 +118,18 @@
         totalMember: 0     // 当前聊天室总人数
       }
     },
+    created() {
+      document.getElementById('app').scrollTop=1000000;
+      // this.$router.beforeEach((to, from, next) => {
+      //     if(to.name === index) {
+      //       this.exitRoom()
+      //     }
+      //     next();
+      // });
+      // window.addEventListener('beforeunload', e => {
+      //     this.exitRoom()
+      // });
+    },
     mounted() {
       //this.loginRome()
       getAuctionInfo({auctionNumberId: '1'}).then(res => {
@@ -153,24 +165,28 @@
         }
       })
       getChatRoom({auctionNumberId: this.$route.query.id}).then(res => {
-        
+      
       })
     },
-    // updated:function(){
-    //   this.$nextTick(function(){
-    //   let div = document.getElementById('dialogue_box');
-    //     div.scrollTop = div.scrollHeight;
-    //   })
-    // },
+    updated:function(){
+      this.$nextTick(function(){
+        let div = document.getElementById('box');
+        let clientH = document.body.clientHeight;
+        if(clientH < div.offsetHeight) {
+          div.scrollTop = parseFloat(div.offsetHeight-clientH);
+        }
+      })
+    },
     destroyed() {
       //this.exitRoom()
     },
     methods: {
       nowOffer() { // 立即出价
-        console.log(1)
+        let content = `出价：${this.offer}`;
+        console.log(content)
       },
       addPrice() { // 加价
-        this.offer += 20.00;
+        this.offer = (this.offer*1+this.addAmount).toFixed(2);
       },
       commentHandle() { // 发表评论
         let contentText = this.commentVal;
@@ -245,7 +261,6 @@
             //data.info.total_member_count 当前聊天室人数
             //data.info.max_member_count 聊天室最大容量
             that.totalMember = data.info.total_member_count
-            console.log(that.totalMember)
             that.enterRoom()
         }).onFail(function (data) {
             console.log('error: ' + JSON.stringify(data));
@@ -256,6 +271,7 @@
       enterRoom() { // 进入房间
         JIM.enterChatroom({'id': this.roomId}).onSuccess(function (data) {
             console.log('加入聊天室 success: ' + JSON.stringify(data));
+            this.getConversation()
         }).onFail(function (data) {
             console.log('加入聊天室 error: ' + JSON.stringify(data));
         });
@@ -282,7 +298,6 @@
             let otherctime = msg.content.create_time;
             let othercontent = msg.content.msg_body.text;  // 消息内容
             let otherItem = { othername:othername, otherctime, othercontent };
-            console.log(othername)
             that.chatLists.push(otherItem);
         }).onFail(function (data) {
             console.log('向聊天室发送消息 error:' + JSON.stringify(data));
@@ -296,9 +311,6 @@
               console.log('error:' + JSON.stringify(data));
         console.log('error: ' +JSON.stringify(data));
           });
-      },
-      scrollTo() {
-        this.$refs.chatRome.scrollTo(1000)
       }
     }
   }  
