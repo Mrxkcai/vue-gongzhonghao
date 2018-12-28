@@ -37,7 +37,8 @@
                     <div class="item-rt">
                         <x-button mini style="color:#fff;">￥{{ item.amount | money }}</x-button>
                         <span>{{ item.createDate | mdformate }}</span>
-                        <img v-if="item.status == 0" src="../../assets/images/icon_chengjiao@2x.png">
+                        <img v-if="item.status == 3" src="../../assets/images/icon_chengjiao@2x.png">
+                        <span v-else>未成交</span>
                     </div>
                 </li> 
                 <li v-if="index == 1" v-for="(item,i) in content">
@@ -47,7 +48,8 @@
                     <div class="item-rt">
                         <x-button mini style="color:#fff;">￥{{ item.amount | money }}</x-button>
                         <span>{{ item.createDate | mdformate }}</span>
-                        <img v-if="item.status == 0" src="../../assets/images/icon_chengjiao@2x.png">
+                        <img v-if="item.status == 3" src="../../assets/images/icon_chengjiao@2x.png">
+                        <span v-else>未成交</span>
                     </div>
                 </li> 
                 <li v-if="index == 2" v-for="(item,i) in content">
@@ -131,6 +133,7 @@
         <div v-transfer-dom>
             <popup v-model="payModel" is-transparent>
                 <div class="pay-model-container flex-box">
+
                     <div class="variable">
                         <div class="pay-model-header">
                             2019年西安国际马拉松 
@@ -244,7 +247,7 @@
                 modelData: {}
             }
         },
-        created() {console.log(this)
+        created() {
             let LoginStatus = Storage.get('isLogin').data;
             if(LoginStatus == false){
                 this.isLogin = false;
@@ -457,7 +460,6 @@
                             .weui-btn {
                                 margin: 0;
                                 font-size: 0.3rem;
-                                
                                 height: 28px;
                                 line-height: 28px;
                                 border-radius: 16px;
@@ -519,10 +521,10 @@
                             .weui-btn {
                                 margin: 0;
                                 font-size: 0.3rem;
-                                
-                                height: 28px;
-                                line-height: 28px;
-                                border-radius: 16px;
+                                height: 36px;
+                                line-height: 36px;
+                                border-radius: 18px;
+                                background-color: #D8DBE0;
                             }
                             .subscribed-btn {
                                 color: #fff;
@@ -538,6 +540,7 @@
                             .buy-btn {
                                 color: #F0A800;
                                 border: 1px solid #F0A800;
+                                background-color: #fff;
                             }
                         }
                     }

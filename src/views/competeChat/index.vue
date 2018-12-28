@@ -174,12 +174,14 @@
     },
     updated:function(){
       this.$nextTick(function(){
-        let div = document.getElementById('box');
-        div.scrollTop = div.scrollHeight;  
+        // let div = document.getElementById('box');
+        // div.scrollTop = div.scrollHeight;  
         // let clientH = document.body.clientHeight;
         // if(clientH < div.offsetHeight) {
         //   div.scrollTop = parseFloat(div.offsetHeight-clientH);
         // }
+        document.body.scrollTop = document.body.scrollHeight;
+        console.log(document.body.scrollTop);
       })
     },
     destroyed() {

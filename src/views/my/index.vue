@@ -3,8 +3,8 @@
         <div v-wechat-title="$route.meta.title"></div>
         <div class="top-container">
             <div class="avator">
-                <img src="userInfo.headUrl">
-                <!-- <img src="https://wx.qlogo.cn/mmopen/vi_32/rvx1PxbCJIJKqdmscqnic4jDep3QibDjXYAAYbkibyyxn5EgvFaj2fG4a3HVLqglRKhScicPaMzbmS8W9nOBe1IHrA/132"> -->
+                <!-- <img :src="userInfo.headUrl"> -->
+                <img src="https://coding.net/static/project_icon/scenery-5.png">
             </div>
             <div class="nickname">{{ userInfo.nickName }}</div>
             <div class="my-container">
@@ -47,7 +47,7 @@
         },
         data() {
             return {
-                userInfo: Object
+                userInfo: {}
             }
         },
         mounted() {
