@@ -120,6 +120,11 @@
         box-sizing: border-box;
         border-top: 3px solid #002F7B;
     }
+
+    .vux-loading .weui-toast {
+        width: 9.6em!important;
+        min-height: 9.6em!important;
+    }
     .flex-box {
         display: flex;
         min-height: 100%;

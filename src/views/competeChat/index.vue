@@ -72,11 +72,12 @@
           </div>
         </div>
       </div>
+      <loading :show="getRoomData" text="获取信息中..."></loading>
       <toast v-model="showToast" position="top" type="text" :time=1500 :text="toastMsg"></toast>
   </div>
 </template>
 <script>
-  import { ViewBox, XInput, XButton, Toast } from 'vux';
+  import { ViewBox, XInput, XButton, Toast, Loading } from 'vux';
   import { sign, getChatRoom, getImInfo, getAuctionInfo, getOffer } from '@/service/api'
   import { formatTime, Storage } from '../../utils/utils'
   /* eslint-disable */
@@ -89,10 +90,12 @@
       ViewBox,
       XInput,
       XButton,
-      Toast
+      Toast,
+      Loading
     },
     data() {
       return {
+        getRoomData: true,
         me:{},
         toastMsg: '进入房间',            // toast提示
         createDate: '',
@@ -172,10 +175,11 @@
     updated:function(){
       this.$nextTick(function(){
         let div = document.getElementById('box');
-        let clientH = document.body.clientHeight;
-        if(clientH < div.offsetHeight) {
-          div.scrollTop = parseFloat(div.offsetHeight-clientH);
-        }
+        div.scrollTop = div.scrollHeight;  
+        // let clientH = document.body.clientHeight;
+        // if(clientH < div.offsetHeight) {
+        //   div.scrollTop = parseFloat(div.offsetHeight-clientH);
+        // }
       })
     },
     destroyed() {
@@ -183,7 +187,7 @@
     },
     methods: {
       nowOffer() { // 立即出价
-        let othercontent = `出价：${this.offer}`;
+        let othercontent = `出价：${this.offer} 元`;
         let otherctime = new Date();
         let othername = this.username;
         let otherItem = { othername, otherctime, othercontent };
@@ -275,6 +279,7 @@
             //data.info.max_member_count 聊天室最大容量
             that.totalMember = data.info.total_member_count
             that.enterRoom()
+            that.getRoomData = false;
         }).onFail(function (data) {
             console.log('error: ' + JSON.stringify(data));
         }).onTimeout(function (data) {
