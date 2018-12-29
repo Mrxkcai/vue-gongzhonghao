@@ -6,7 +6,7 @@
           <div>正在进行: <span class="end-time">预计 {{createDate}} 结束</span></div>
           <router-link to="./">购买协议</router-link>
         </div>
-        <p class="">
+        <p>
           {{matchName}} <span class="compete-number">{{ name }}</span> 的使用权
         </p>
         <div class="current-content">
@@ -20,8 +20,8 @@
         </div>
       </div>
       <!-- 聊天室 -->
-      <view-box ref="chatRome" id="box" style="width:100%;">
-        <div class="variable">
+      <view-box ref="chatRome" style="width:100%;">
+        <div class="variable" id="variable" ref="variable">
           <div class="compete-chat-content" v-for="n in chatLists">
             <!-- 自己 -->
             <div class="me" v-if="username == n.othername">
@@ -124,6 +124,11 @@
       }
     },
     created() {
+
+      //document.getElementById('variable').offsetHeight = chatContentH + 'px';
+      // this.$refs.variable.style.paddingTop = document.querySelector('.compete-chat-top').offsetHeight + 'px';
+      
+      
       // this.$router.beforeEach((to, from, next) => {
       //     if(to.name === index) {
       //       this.exitRoom()
@@ -136,6 +141,11 @@
     },
     mounted() {
       //this.loginRome()
+      let clienH = document.body.clientHeight;
+      let topH = document.querySelector('.compete-chat-top').offsetHeight;
+      let bottomH = document.querySelector('.compete-chat-bottom').offsetHeight;
+      let chatContentH = clienH - topH - bottomH;
+      document.getElementById('variable').style.height = chatContentH + 'px';
       getAuctionInfo({auctionNumberId: this.$route.query.id}).then(res => {
         if(res.code == 200) {
           this.addAmount = res.data.addAmount;
@@ -171,23 +181,21 @@
       getChatRoom({auctionNumberId: this.$route.query.id}).then(res => {
       
       })
-    },
-    updated:function(){
-      this.$nextTick(function(){
-        // let div = document.getElementById('box');
-        // div.scrollTop = div.scrollHeight;  
-        // let clientH = document.body.clientHeight;
-        // if(clientH < div.offsetHeight) {
-        //   div.scrollTop = parseFloat(div.offsetHeight-clientH);
-        // }
-        document.body.scrollTop = document.body.scrollHeight;
-        console.log(document.body.scrollTop);
-      })
+      this.scrollToBottom()
     },
     destroyed() {
       //this.exitRoom()
     },
+    updated: function () {
+      this.scrollToBottom();
+    },
     methods: {
+      scrollToBottom() {
+        this.$nextTick(() => {
+          var container = this.$el.querySelector("#variable");
+          container.scrollTop =  container.scrollHeight;
+        })
+      },
       nowOffer() { // 立即出价
         let othercontent = `出价：${this.offer} 元`;
         let otherctime = new Date();
@@ -407,7 +415,7 @@
         color: #333;
         padding: 3.8rem 0 100px 0;
         width: 100%;
-        height: 100%;
+        overflow-y:scroll;
         .compete-chat-content {
           padding: 17px;
           .avator {
@@ -462,7 +470,6 @@
               .chat-content {
                 display: inline-block;
                 text-align: right;
-                margin-top: 7px;
                 position: relative;
                 font-size: 14px;
                 color: #192137;
