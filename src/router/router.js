@@ -86,8 +86,8 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-    let token = Storage.get('token')
-    let refreshToken = Storage.get('refreshToken')
+    let token = Storage.get('token').data
+    let refreshToken = Storage.get('refreshToken').data
     if (to.meta.requireAuth) {
         if (refreshToken !== undefined && token !== undefined) {
             next()

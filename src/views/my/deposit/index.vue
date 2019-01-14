@@ -140,7 +140,7 @@
             .deposit-detail-container {
                 width: 100%;
                 margin: 0 auto;
-                margin: 0.7rem 0 0 0;
+                margin: 0.7rem 0 1rem 0;
                 padding: 23px 0;
                 background:#fff;
                 box-shadow: 0px 2px 15px 0px rgba(81,81,87,0.3);

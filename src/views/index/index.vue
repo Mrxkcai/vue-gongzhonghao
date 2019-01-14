@@ -19,7 +19,7 @@
                 <img src="../../assets/images/img_bg_title@2x.png">
                 <div class="endtime">
                     <span>结束时间：</span>
-                    <span style="color: #F17F1A;">2018.12.12 12:00</span>
+                    <span style="color: #F17F1A;">{{ endDate }}</span>
                 </div>
             </div>
             <div class="now-detail">
@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="tab-container">
-            <ul class="index-list">
+            <ul class="index-list" v-if="content.length">
                 <li v-if="index == 0" v-for="(item,i) in content">
                     <div class="item-lt">
                         <span>{{ item.name }}</span>
@@ -37,7 +37,8 @@
                     <div class="item-rt">
                         <x-button mini style="color:#fff;">￥{{ item.amount | money }}</x-button>
                         <span>{{ item.createDate | mdformate }}</span>
-                        <img v-if="item.status == 0" src="../../assets/images/icon_chengjiao@2x.png">
+                        <img v-if="item.status == 3" src="../../assets/images/icon_chengjiao@2x.png">
+                        <span v-else>未成交</span>
                     </div>
                 </li> 
                 <li v-if="index == 1" v-for="(item,i) in content">
@@ -47,7 +48,8 @@
                     <div class="item-rt">
                         <x-button mini style="color:#fff;">￥{{ item.amount | money }}</x-button>
                         <span>{{ item.createDate | mdformate }}</span>
-                        <img v-if="item.status == 0" src="../../assets/images/icon_chengjiao@2x.png">
+                        <img v-if="item.status == 3" src="../../assets/images/icon_chengjiao@2x.png">
+                        <span v-else>未成交</span>
                     </div>
                 </li> 
                 <li v-if="index == 2" v-for="(item,i) in content">
@@ -101,6 +103,7 @@
                     </div>
                 </li>
             </ul>
+            <no-data explain="没有拍卖信息" fontColor="#A5A8B4" containerHeight="9rem" v-else></no-data>
         </div>
     
         <!-- 验证码 model -->
@@ -130,6 +133,7 @@
         <div v-transfer-dom>
             <popup v-model="payModel" is-transparent>
                 <div class="pay-model-container flex-box">
+
                     <div class="variable">
                         <div class="pay-model-header">
                             2019年西安国际马拉松 
@@ -173,6 +177,7 @@
 <script>
     import { Toast, Tab, TabItem, Sticky, Divider, XButton, Swiper, SwiperItem, Grid, GridItem, Cell, Group, Popup, XInput, Checklist, Loading, TransferDomDirective as TransferDom } from 'vux'
     import nwFooter from '../../components/nwFooter'
+    import noData from '../../components/noData'
     import  { login, getAuctionNumber, getRemind, verifyCode, send } from '../../service/api'
     import { Storage } from '@/utils/utils'
     export default {
@@ -181,6 +186,7 @@
             TransferDom
         },
         components: {
+            noData,
             Toast,
             Tab, 
             TabItem, 
@@ -205,6 +211,7 @@
         },
         data() {
             return {
+                endDate: '',
                 showToast: false,
                 showLoading: false,
                 content: [],
@@ -252,8 +259,7 @@
         methods: {
             logIn() {
                 if (this.mobile !=='' || this.authCode !== '') {
-                    let params = { mobile:this.mobile,code:this.authCode };
-                    login(params).then(res => {
+                    login({mobile:this.mobile,code:this.authCode}).then(res => {
                         if(res.code == 200) {
                             Storage.set('refreshToken', res.data.refreshToken);
                             Storage.set('token', res.data.token)
@@ -305,6 +311,7 @@
             //     })
             // },
             tabItem(i) {
+                this.content = [];
                 this.showLoading = true;
                 this.index = i;
                 switch(i) {
@@ -336,8 +343,12 @@
                 getAuctionNumber(params).then(res => {
                     if(res.code == 200) {
                         this.content = res.data.content;
-                        this.showLoading = false;
+                        // 结束时间
+                        if(this.content.length && this.content[0].endDate !== undefined) { 
+                            this.endDate = this.content[0].endDate;
+                        }
                     }
+                    this.showLoading = false;
                 })
             },
             goCompeteChat(e) {
@@ -449,7 +460,6 @@
                             .weui-btn {
                                 margin: 0;
                                 font-size: 0.3rem;
-                                
                                 height: 28px;
                                 line-height: 28px;
                                 border-radius: 16px;
@@ -511,10 +521,10 @@
                             .weui-btn {
                                 margin: 0;
                                 font-size: 0.3rem;
-                                
-                                height: 28px;
-                                line-height: 28px;
-                                border-radius: 16px;
+                                height: 36px;
+                                line-height: 36px;
+                                border-radius: 18px;
+                                background-color: #D8DBE0;
                             }
                             .subscribed-btn {
                                 color: #fff;
@@ -530,6 +540,7 @@
                             .buy-btn {
                                 color: #F0A800;
                                 border: 1px solid #F0A800;
+                                background-color: #fff;
                             }
                         }
                     }
