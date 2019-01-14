@@ -46,16 +46,16 @@ module.exports = {
         // }
     },
     // css: {
-    //     loaderOptions: {
-    //         css: {},
-    //         postcss: {
-    //             plugins: [
-    //                 require('postcss-px2rem')({
-    //                     remUnit: 75
-    //                 })
-    //             ]
-    //         }
-    //     }
+        // loaderOptions: {
+        //     css: {},
+            // postcss: {
+            //     plugins: [
+            //         require('postcss-px2rem')({
+            //             remUnit: 75
+            //         })
+            //     ]
+            // }
+        // }
     // },
     configureWebpack: config => {
         require('vux-loader').merge(config, {
